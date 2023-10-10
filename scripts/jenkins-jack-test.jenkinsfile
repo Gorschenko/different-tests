@@ -1,0 +1,11 @@
+pipeline {
+    agent any
+    stages {
+        stage('form vscode') {
+            steps {
+                echo 'test'
+                sleep 30
+            }
+        }
+    }
+}
