@@ -1,0 +1,34 @@
+{
+    "workbench.iconTheme": "material-icon-theme",
+    "jenkins-jack.jenkins.connections": [
+        {
+            "name": "localhost:8080",
+            "uri": "http://localhost:8080",
+            "username": "admin",
+            "active": true
+        }
+    ],
+    "jenkins-runner.hostConfigs": {
+        "host-with-password": {
+            "url": "http://localhost:8080",
+            "user": "admin",
+            "password": "admin",
+            "useCrumbIssuer": true,
+            "rejectUnauthorizedCert": false
+        },
+        "host-prompt-for-password": {
+            "url": "http://server:8090",
+            "user": "admin"
+        },
+        "host-no-password": {
+            "url": "http://server-no-auth:8090"
+        }
+    },
+    "jenkins-runner.jobs": {
+        "test 1 - defaults": {
+            "isDefault": true,
+            "runWith": "host-with-password",
+            "name": "jenkins-runner-test"
+        }
+    }
+}
