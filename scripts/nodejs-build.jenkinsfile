@@ -11,6 +11,11 @@ pipeline {
                 git credentialsId: 'Gorschenko-github', url: 'https://github.com/Gorschenko/jenkins'
             }
         }
+        stage('install') {
+            steps {
+                sh 'npm i'
+            }
+        }
         stage ('build') {
             steps {
                 sh 'npm run build'
