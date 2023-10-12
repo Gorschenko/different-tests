@@ -1,0 +1,17 @@
+pipeline {
+    agent {
+        label 'linux'
+    }
+    stages {
+        stage('stage 1') {
+            steps {
+                sh 'touch 1'
+                timeout(5) {
+                    waitUntil {
+                        fileExists 'myFile.yml'
+                    }
+                }
+            }
+        }
+    }
+}
