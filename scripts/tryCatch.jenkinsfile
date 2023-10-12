@@ -1,0 +1,34 @@
+pipeline {
+    agent {
+        label 'linux'
+    }
+    stages {
+        stage('Hello') {
+            steps {
+                catchError(message: 'Skip because unstable', buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
+                    retry(3) {
+                        sh 'exit 1'
+                    }
+                }
+            }
+        }
+        stage('Hello 2') {
+            steps {
+                script {
+                    try {
+                        retry(3) {
+                            sh 'exit 1'
+                        }
+                    } catch (e) {
+                        currentBuild.result = 'UNSTABLE'
+                    }
+                }
+            }
+        }
+        stage('stage 2') {
+            steps {
+                sh 'echo stage2'
+            }
+        }
+    }
+}
