@@ -1,0 +1,16 @@
+pipeline {
+    agent {
+        label 'linux'
+    }
+    stages {
+        stage('Hello') {
+            steps {
+                lock(label: 'database', variable: 'LOCKED_RESOURCE', quantity: 1) {
+                    echo env.LOCKED_RESOURCE
+                    sh 'echo Hello World!'
+                    sleep 30
+                }
+            }
+        }
+    }
+}

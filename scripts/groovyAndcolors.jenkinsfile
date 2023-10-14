@@ -1,0 +1,50 @@
+def getProjectName() {
+    return 'It is test text'
+}
+
+def List getFiles() {
+    return [
+        [
+            name: 'file1', folder: 'folder1'
+        ],
+        [
+            name: 'file2', folder: 'folder2'
+        ]
+    ]
+}
+
+def loadColors() {
+    CEND = '\033[0m'
+    CVIOLETBG2 = '\033[91m'
+}
+
+def error(String message ) {
+    loadColors()
+    sh """
+    set +x; echo "${CVIOLETBG2} $message ${CEND}"
+    """
+}
+
+
+pipeline {
+    agent {
+        label 'linux'
+    }
+    options {
+        ansiColor('xterm')
+    }
+    stages {
+        stage('stage 1') {
+            steps {
+                script {
+                    getFiles().each { p ->
+                        sh "mkdir -p $p.folder"
+                        sh "touch $p.folder/$p.name"
+                    }
+                    println getProjectName()
+                    error('error message')
+                }
+            }
+        }
+    }
+}
