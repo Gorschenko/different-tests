@@ -1,0 +1,59 @@
+import groovy.json.JsonSlurperClassic
+def String link1 = 'https://run.mocky.io/v3/c40f5d30-1f5d-4637-b9a4-30467f47ea31'
+def String link2 = 'https://run.mocky.io/v3/92c73454-a4d1-4719-a8e4-02b6820e7444'
+
+
+def withRetry(req, Number attempts, Number delayInSeconds) {
+    def success = false
+    while (!success && attempts > 0) {
+        success = req()
+        done = req()
+        if (!success) {
+            sleep(delayInSeconds)
+        }
+        attempts--
+    }
+}
+
+def loadColors() {
+    CEND = '\033[0m'
+    CVIOLETBG2 = '\033[91m'
+}
+
+def error(String message ) {
+    loadColors()
+    sh """
+    set +x; echo "${CVIOLETBG2} $message ${CEND}"
+    """
+}
+
+pipeline {
+    agent {
+        label 'linux'
+    }
+    options {
+        ansiColor('xterm')
+    }
+    stages {
+        stage('stage 1') {
+            steps {
+                script {
+                    withRetry({
+                        def connection = new URL(link2).openConnection() as HttpURLConnection
+                        connection.setRequestProperty('Accept', 'application/json')
+                        def json = connection.inputStream.text
+                        data = new JsonSlurperClassic().parseText(json)
+                        def status = data.status
+                        println("Status is $status")
+                        // if (status && status == 'failed') {
+                        //     println('Upload failed')
+                        //     currentBuild.result = 'FAILED'
+                        //     return true
+                        // }
+                        return status && status == 'uploaded'
+                    }, 5, 5)
+                }
+            }
+        }
+    }
+}
