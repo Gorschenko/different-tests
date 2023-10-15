@@ -9,7 +9,7 @@ pipeline {
         stage('checkout') {
             steps {
                 // git credentialsId: 'Gorschenko-github', url: 'https://github.com/Gorschenko/jenkins'
-                sciprt {
+                script {
                     checkout scm
                 }
             }
