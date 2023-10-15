@@ -8,7 +8,10 @@ pipeline {
     stages {
         stage('checkout') {
             steps {
-                git credentialsId: 'Gorschenko-github', url: 'https://github.com/Gorschenko/jenkins'
+                // git credentialsId: 'Gorschenko-github', url: 'https://github.com/Gorschenko/jenkins'
+                sciprt {
+                    checkout scm
+                }
             }
         }
         stage('install') {
