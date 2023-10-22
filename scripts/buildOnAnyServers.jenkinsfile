@@ -3,7 +3,7 @@ pipeline {
     stages {
         stage ('open VPN') {
             steps {
-                sh 'echo "open VPN"'
+                sh 'echo "open VPN test"'
             }
         }
     }
