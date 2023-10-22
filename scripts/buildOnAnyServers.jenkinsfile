@@ -1,0 +1,10 @@
+pipeline {
+    agent any
+    stages {
+        stage ('open VPN') {
+            steps {
+                sh 'echo "open VPN"'
+            }
+        }
+    }
+}
