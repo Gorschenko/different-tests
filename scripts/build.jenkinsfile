@@ -1,0 +1,36 @@
+def String agentLabel = ''
+def String preprodAgentLabel = 'preprod-linux'
+def String pskDevAgentLabel = 'psk-dev-linux'
+def String gitLabCredentials = 'algor-gitlab-password'
+
+pipeline { 
+    agent any
+    stages {
+        stage('Set agent label') {
+            steps {
+                script {
+                    switch(env.gitlabTargetBranch) {
+                        case 'testDev':
+                            agentLabel = preprodAgentLabel
+                            break
+                        case 'testProd':
+                            agentLabel = pskDevAgentLabel
+                            break
+                    }
+                }
+            }
+        }
+        stage ('Git pull testProd') {
+            when {
+                expression { env.gitlabTargetBranch != '' }
+            }
+            agent {
+                label agentLabel
+            }
+            steps {
+                git branch: env.gitlabTargetBranch, credentialsId: gitLabCredentials, url: env.gitlabSourceRepoHomepage
+                sh 'docker compose -f ./build.docker-compose.yml up -d --build'
+            }
+        }
+    } 
+}
