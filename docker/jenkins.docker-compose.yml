@@ -4,7 +4,6 @@ services:
     image: jenkins/jenkins:lts
     container_name: jenkins
     privileged: true
-    # network_mode: 'host'
     user: root
     ports:
       - 8080:8080
