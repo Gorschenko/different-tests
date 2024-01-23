@@ -71,3 +71,27 @@ audiCar = new Autopilot(audiCar);
 console.log(audiCar.getPrice(), audiCar.getDescription());
 
 // Second example
+
+class Server {
+  constructor(ip, port, protocol = "http") {
+    this.ip = ip;
+    this.port = port;
+    this.protocol = protocol;
+  }
+
+  get url() {
+    return `${this.protocol}://${this.ip}:${this.port}`;
+  }
+}
+
+class AwsServer {
+  constructor(server) {
+    this.server = server;
+    this.isAws = true;
+  }
+}
+
+let server = new Server("11.22.33.44", 8080);
+server = new AwsServer(server);
+
+console.log(server);
