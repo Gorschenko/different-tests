@@ -11,5 +11,5 @@ COPY --from=prebuild /opt/app/build ./build
 
 FROM nginx:stable-alpine
 COPY --from=build /opt/app/build /usr/share/nginx/html
-COPY ./nginx/nginx.conf /etc/nginx/conf.d/default.conf
-EXPOSE 80
+COPY ${NGINX_EXTERNAL_PATH_TO_CONFIG} ${NGINX_INTERNAL_PATH_TO_CONFIG}
+EXPOSE ${NGINX_PORT}
