@@ -1,11 +1,11 @@
-FROM node:lts-alpine as prebuild
+FROM node:20-alpine as prebuild
 WORKDIR /opt/app
 COPY ./package.json .
-RUN npm install
+RUN npm install --legacy-peer-deps
 COPY . .
 RUN npm run build
 
-FROM node:lts-alpine as build
+FROM node:20-alpine as build
 WORKDIR /opt/app
 COPY --from=prebuild /opt/app/build ./build
 
