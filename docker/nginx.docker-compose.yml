@@ -1,0 +1,11 @@
+version: '3'
+services:
+  nginx:
+    image: nginx:stable-alpine
+    ports:
+      - ${NGINX_PORT}:${NGINX_PORT}
+      - 81:81
+      - 8080:8080
+    volumes:
+      - ${NGINX_EXTERNAL_PATH_TO_CONFIG}:${NGINX_INTERNAL_PATH_TO_CONFIG}
+    restart: always

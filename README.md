@@ -1,5 +1,5 @@
-## Client
+## Nginx
 
 ### Deploy
 
-1. docker compose -f ./docker/client.docker-compose.yml --env-file ./.env up -d
+1. docker compose -f ./docker/nginx.docker-compose.yml --env-file ./envs/.nginx.env up -d
