@@ -12,4 +12,5 @@ services:
       - ../public/favicon.ico:/opt/www/files/favicon.ico
       - ../public/index.html:/opt/www/files/index.html
       - ../public/manifest.json:/tmp/manifest.json
+      - ../nginx/.htpasswd:/etc/nginx/.htpasswd
     restart: always
