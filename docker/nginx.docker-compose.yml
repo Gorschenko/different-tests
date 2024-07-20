@@ -8,9 +8,10 @@ services:
       # - 8080:8080
     volumes:
       - ${NGINX_EXTERNAL_PATH_TO_CONFIG}:${NGINX_INTERNAL_PATH_TO_CONFIG}
-    # for 3 lesson
-      - ../public/favicon.ico:/opt/www/files/favicon.ico
-      - ../public/index.html:/opt/www/files/index.html
-      - ../public/manifest.json:/tmp/manifest.json
-      - ../nginx/.htpasswd:/etc/nginx/.htpasswd
+      # for 3 lesson
+      # - ../public/favicon.ico:/opt/www/files/favicon.ico
+      # - ../public/index.html:/opt/www/files/index.html
+      # - ../public/manifest.json:/tmp/manifest.json
+      # for 6 lesson
+      # - ../nginx/6/.htpasswd:/etc/nginx/.htpasswd
     restart: always
