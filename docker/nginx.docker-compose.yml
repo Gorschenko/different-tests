@@ -4,6 +4,9 @@ services:
     image: nginx:stable-alpine
     ports:
       - ${NGINX_PORT}:${NGINX_PORT}
+      - 81:81
+      - 82:82
+      # for 1 lesson
       # - 81:81
       # - 8080:8080
     volumes:
