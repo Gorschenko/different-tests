@@ -18,5 +18,5 @@ services:
       # for auth lesson
       # - ../nginx/6/.htpasswd:/etc/nginx/.htpasswd
       # for geolocation lesson
-      - ../nginx/8/GeoIP.dat:/usr/share/GeoIP/GeoIP.dat
+      # - ../nginx/8/GeoIP.dat:/usr/share/GeoIP/GeoIP.dat
     restart: always
