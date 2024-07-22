@@ -4,19 +4,19 @@ services:
     image: nginx:stable-alpine
     ports:
       - ${NGINX_PORT}:${NGINX_PORT}
-      - 81:81
-      - 82:82
-      # for 1 lesson
+      # - 81:81
+      # - 82:82
+      # for locations lesson
       # - 81:81
       # - 8080:8080
     volumes:
       - ${NGINX_EXTERNAL_PATH_TO_CONFIG}:${NGINX_INTERNAL_PATH_TO_CONFIG}
-      # for 3 lesson
+      # for static lesson
       # - ../public/favicon.ico:/opt/www/files/favicon.ico
       # - ../public/index.html:/opt/www/files/index.html
       # - ../public/manifest.json:/tmp/manifest.json
-      # for 6 lesson
+      # for auth lesson
       # - ../nginx/6/.htpasswd:/etc/nginx/.htpasswd
-      # for 8 lesson
+      # for geolocation lesson
       - ../nginx/8/GeoIP.dat:/usr/share/GeoIP/GeoIP.dat
     restart: always
