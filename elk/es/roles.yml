@@ -1,0 +1,24 @@
+roles:
+- name: kibana_system_role
+  cluster:
+    - monitor
+  indices:
+  - names:
+    - ".kibana*"
+    privileges:
+      - read
+- name: logstash_system_role
+  cluster:
+    - manage_index_templates
+    - monitor
+    - manage_ilm
+  indices:
+    - names:
+        - "logstash-*"
+      privileges:
+        - write
+        - create
+        - create_index
+        - manage
+        - manage_ilm
+

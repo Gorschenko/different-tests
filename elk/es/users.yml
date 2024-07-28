@@ -1,0 +1,9 @@
+users:
+  - username: kibana_system
+    password: kibana
+    roles:
+      - kibana_system_role
+  - username: logstash_system
+    password: logstash
+    roles:
+      - logstash_system_role

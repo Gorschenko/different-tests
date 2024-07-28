@@ -8,6 +8,11 @@
 # testing
 /coverage
 
+# docker volumes
+es1data
+es2data
+es3data
+
 # production
 /build
 
