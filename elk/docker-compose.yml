@@ -4,16 +4,16 @@ services:
     ports:
       - 9200:9200
     environment:
-    # Позволит отключить автоматическое обнаружение других нод
+    # Позволит отключить автоматическое обнаружение других экземпляров
       - discovery.type=single-node
-    # Начиная с 8 версии модель авторизации влючен по умолчанию
-      - xpack.security.enabled=true
+    # Настройка модуля аутентификации и авторизации
+      - xpack.security.enabled=false
     # Отлючаем первичный вход в систему по токену
       - xpack.security.authc.token.enabled=false
       - ELASTIC_PASSWORD=elastic
     volumes:
-      - ./es/roles.yml:/usr/share/elasticsearch/config/roles.yml
-      - ./es/uers.yml:/usr/share/elasticsearch/config/users.yml
+      # - ./es/roles.yml:/usr/share/elasticsearch/config/roles.yml
+      # - ./es/users.yml:/usr/share/elasticsearch/config/users.yml
       - ./es1data:/usr/share/elasticsearch/data
     restart: always
     networks:
@@ -23,10 +23,11 @@ services:
     ports:
       - 5601:5601
     environment:
+      # Включает атворизацию в UI
       - xpack.security.enabled=true
-      - ELASTICSEARCH_URL=http://es1:9200
-      - ELASTICSEARCH_USERNAME=kibana_system
-      - ELASTICSEARCH_PASSWORD=kibana
+      - ELASTICSEARCH_HOSTS=http://es1:9200
+      # - ELASTICSEARCH_USERNAME=kibana_system
+      # - ELASTICSEARCH_PASSWORD=kibanafa
     restart: always
     depends_on:
       - es1
@@ -39,8 +40,8 @@ services:
     environment:
     # Отключает мониторинг logstash
       - xpack.monitoring.enabled=false
-      - ELASTICSEARCH_USERNAME=logstash_system
-      - ELASTICSEARCH_PASSWORD=logstash
+      # - ELASTICSEARCH_USERNAME=logstash_system
+      # - ELASTICSEARCH_PASSWORD=logstash
     volumes:
       - ./logstash/logstash.conf:/usr/share/logstash/config/logstash.conf
     restart: always
