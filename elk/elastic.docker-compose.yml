@@ -2,7 +2,7 @@ services:
   es1:
     image: elasticsearch:8.4.3
     ports:
-      - 9200:9200
+      - ${ELASTICSEARCH_PORT}:${ELASTICSEARCH_PORT}
     environment:
     # Если указать single-node,то
     # позволит отключить автоматическое обнаружение других экземпляров
@@ -13,31 +13,29 @@ services:
       - xpack.security.authc.token.enabled=false
       - ELASTIC_PASSWORD=${ELASTICSEARCH_PASSWORD}
     volumes:
-      # - ./es/roles.yml:/usr/share/elasticsearch/config/roles.yml
-      # - ./es/users.yml:/usr/share/elasticsearch/config/users.yml
       - ./es1data:/usr/share/elasticsearch/data
     restart: always
     networks:
-      - elk
+      - ${NETWORK_NAME}
   kibana:
     image: kibana:8.4.3
     ports:
-      - 5601:5601
+      - ${KIBANA_PORT}:${KIBANA_PORT}
     environment:
       # Включает атворизацию в UI
       - xpack.security.enabled=true
-      - ELASTICSEARCH_HOSTS=http://es1:9200
+      - ELASTICSEARCH_HOSTS=http://es1:${ELASTICSEARCH_PORT}
       - ELASTICSEARCH_USERNAME=kibana_system
       - ELASTICSEARCH_PASSWORD=${KIBANA_SYSTEM_PASSWORD}
     restart: always
     depends_on:
       - es1
     networks:
-      - elk
+      - ${NETWORK_NAME}
   logstash:
     image: logstash:8.4.3
     ports:
-      - 5044:5044
+      - ${LOGSTASH_PORT}:${LOGSTASH_PORT}
     environment:
     # Отключает мониторинг logstash
       - xpack.monitoring.enabled=false
@@ -49,6 +47,18 @@ services:
     depends_on:
       - es1
     networks:
-      - elk
+      - ${NETWORK_NAME}
+  filebeat:
+    image: elastic/filebeat:8.4.3
+    # Фиксит особенности файловой системы, если контейнер запускается на ОС Windows
+    entrypoint: "filebeat -e -strict.perms=false"
+    volumes:
+      - ./filebeat/config.yml:/usr/share/filebeat/filebeat.yml
+      - ../docker/nginx/logs:/var/logs/nginx:ro
+    restart: always
+    depends_on:
+      - logstash
+      - kibana
 networks:
   elk:
+    name: ${NETWORK_NAME}

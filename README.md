@@ -6,7 +6,7 @@
 
 ### ELK
 
-1. docker compose -f ./elk/docker-compose.yml --env-file ./envs/.elk.env up -d --build
+1. docker compose -f ./elk/elastic.docker-compose.yml --env-file ./envs/.elk.env up -d --build
 2. Запустить стартовый скрипт, который настроит пароли для системных пользователей:
    ./elk/scripts/start.sh
 
