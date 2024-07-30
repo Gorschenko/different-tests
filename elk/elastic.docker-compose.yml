@@ -58,7 +58,8 @@ services:
     restart: always
     depends_on:
       - logstash
-      - kibana
+    networks:
+      - ${NETWORK_NAME}
 networks:
   elk:
     name: ${NETWORK_NAME}
