@@ -3,8 +3,8 @@ filebeat.inputs:
     enabled: true
     paths:
       - /var/logs/nginx/*.log
-    tags:
-      - nginx-access
+    # tags:
+    #   - nginx-access
 output.logstash:
   enabled: true
   hosts:
