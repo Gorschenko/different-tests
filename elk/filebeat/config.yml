@@ -9,8 +9,3 @@ output.logstash:
   enabled: true
   hosts:
     - logstash:5044
-# Загружает панели мониторинг Filebeat
-# setup.kibana:
-#   host: http://kibana:5601
-#   username: elastic
-#   password: elastic

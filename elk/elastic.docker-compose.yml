@@ -25,6 +25,7 @@ services:
       # Включает атворизацию в UI
       - xpack.security.enabled=true
       - ELASTICSEARCH_HOSTS=http://es1:${ELASTICSEARCH_PORT}
+      # Используется для внутренний аутентификации систем
       - ELASTICSEARCH_USERNAME=kibana_system
       - ELASTICSEARCH_PASSWORD=${KIBANA_SYSTEM_PASSWORD}
     restart: always
@@ -39,6 +40,7 @@ services:
     environment:
     # Отключает мониторинг logstash
       - xpack.monitoring.enabled=false
+    # Используется для внутренний аутентификации систем
       - ELASTICSEARCH_USERNAME=logstash_system
       - ELASTICSEARCH_PASSWORD=${LOGSTASH_SYSTEM_PASSWORD}
     volumes:
