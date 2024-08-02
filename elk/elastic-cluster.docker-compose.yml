@@ -8,13 +8,12 @@ services:
       - cluster.name=es-docker-cluster
       - discovery.seed_hosts=es2
       - cluster.initial_master_nodes=es1,es2
-      - xpack.security.enabled=true
-      - xpack.security.authc.token.enabled=false
+      - xpack.security.enabled=false
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
       - ELASTIC_PASSWORD=${ELASTICSEARCH_SYSTEM_PASSWORD}
     volumes:
       - ./es1data:/usr/share/elasticsearch/data
-    # restart: always
+    restart: always
     networks:
       - ${NETWORK_NAME}
   es2:
@@ -24,13 +23,26 @@ services:
       - cluster.name=es-docker-cluster
       - discovery.seed_hosts=es1
       - cluster.initial_master_nodes=es1,es2
-      - xpack.security.enabled=true
-      - xpack.security.authc.token.enabled=false
+      - xpack.security.enabled=false
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
       - ELASTIC_PASSWORD=${ELASTICSEARCH_SYSTEM_PASSWORD}
     volumes:
       - ./es2data:/usr/share/elasticsearch/data
-    # restart: always
+    restart: always
+    networks:
+      - ${NETWORK_NAME}
+  kibana:
+    image: kibana:8.4.3
+    ports:
+      - ${KIBANA_PORT}:${KIBANA_PORT}
+    environment:
+      - xpack.security.enabled=false
+      - ELASTICSEARCH_HOSTS=http://es1:${ELASTICSEARCH_PORT}
+      - ELASTICSEARCH_USERNAME=${KIBANA_SYSTEM_USER}
+      - ELASTICSEARCH_PASSWORD=${KIBANA_SYSTEM_PASSWORD}
+    restart: always
+    depends_on:
+      - es1
     networks:
       - ${NETWORK_NAME}
 networks:

@@ -13,7 +13,7 @@ services:
       - xpack.security.authc.token.enabled=false
       - ELASTIC_PASSWORD=${ELASTICSEARCH_SYSTEM_PASSWORD}
     # Ограничивает ресурс для Java
-      - "ES_JAVA_OPTS=-Xms1024m -Xmx1024m"
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     volumes:
       - ./es1data:/usr/share/elasticsearch/data
     restart: always
