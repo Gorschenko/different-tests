@@ -9,7 +9,9 @@ create_user() {
     "roles" : [ "'$3'" ]
   }'
 
-curl -X POST "${url}" \
+  echo "Creation ${user} user with ${role} is started"
+
+  curl -X POST "${url}" \
     -H "${content_type}" \
     -u "${ELASTICSEARCH_SYSTEM_USER}:${ELASTICSEARCH_SYSTEM_PASSWORD}" \
     -d "${request_body}"
