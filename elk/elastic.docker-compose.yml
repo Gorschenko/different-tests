@@ -12,6 +12,7 @@ services:
     # Отлючаем первичный вход в систему по токену
       - xpack.security.authc.token.enabled=false
       - ELASTIC_PASSWORD=${ELASTICSEARCH_SYSTEM_PASSWORD}
+      - "ES_JAVA_OPTS=-Xms1024m -Xmx1024m"
     volumes:
       - ./es1data:/usr/share/elasticsearch/data
     restart: always
