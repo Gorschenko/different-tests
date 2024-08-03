@@ -24,16 +24,16 @@ services:
       # Проверяет только сертификаты без адресов (full)
       - xpack.security.transport.ssl.verification_mode=certificate
       # Путь к SSL-сертификату и ключу
-      - xpack.security.transport.ssl.keystore.path=${ELASTICSEARCH_CERTS_PATH}
+      - xpack.security.transport.ssl.keystore.path=${ELASTICSEARCH_CERTS_DIRECTORY}/${ELASTICSEARCH_CERTS_FILE}
       # Путь к доверенному сертификату (СА)
-      - xpack.security.transport.ssl.truststore.path=${ELASTICSEARCH_CERTS_PATH}
+      - xpack.security.transport.ssl.truststore.path=${ELASTICSEARCH_CERTS_DIRECTORY}/${ELASTICSEARCH_CERTS_FILE}
       # Аналогично для HTTP
       - xpack.security.http.ssl.enabled=true
-      - xpack.security.http.ssl.keystore.path=${ELASTICSEARCH_CERTS_PATH}
-      - xpack.security.http.ssl.truststore.path=${ELASTICSEARCH_CERTS_PATH}
+      - xpack.security.http.ssl.keystore.path=${ELASTICSEARCH_CERTS_DIRECTORY}/${ELASTICSEARCH_CERTS_FILE}
+      - xpack.security.http.ssl.truststore.path=${ELASTICSEARCH_CERTS_DIRECTORY}/${ELASTICSEARCH_CERTS_FILE}
     volumes:
       - ./es1data:/usr/share/elasticsearch/data
-      - ./certs-creator/certs:${ELASTICSEARCH_DIRECTORY}/config/certs
+      - ./certs-creator/certs:${ELASTICSEARCH_CERTS_DIRECTORY}
     restart: always
     networks:
       - ${NETWORK_NAME}
@@ -47,21 +47,16 @@ services:
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
       - ELASTIC_PASSWORD=${ELASTICSEARCH_SYSTEM_PASSWORD}
       - xpack.security.enabled=true
-      # Включаем SSL
       - xpack.security.transport.ssl.enabled=true
-      # Проверяет только сертификаты без адресов (full)
       - xpack.security.transport.ssl.verification_mode=certificate
-      # Путь к SSL-сертификату и ключу
-      - xpack.security.transport.ssl.keystore.path=${ELASTICSEARCH_CERTS_PATH}
-      # Путь к доверенному сертификату (СА)
-      - xpack.security.transport.ssl.truststore.path=${ELASTICSEARCH_CERTS_PATH}
-      # Аналогично для HTTP
+      - xpack.security.transport.ssl.keystore.path=${ELASTICSEARCH_CERTS_DIRECTORY}/${ELASTICSEARCH_CERTS_FILE}
+      - xpack.security.transport.ssl.truststore.path=${ELASTICSEARCH_CERTS_DIRECTORY}/${ELASTICSEARCH_CERTS_FILE}
       - xpack.security.http.ssl.enabled=true
-      - xpack.security.http.ssl.keystore.path=${ELASTICSEARCH_CERTS_PATH}
-      - xpack.security.http.ssl.truststore.path=${ELASTICSEARCH_CERTS_PATH}
+      - xpack.security.http.ssl.keystore.path=${ELASTICSEARCH_CERTS_DIRECTORY}/${ELASTICSEARCH_CERTS_FILE}
+      - xpack.security.http.ssl.truststore.path=${ELASTICSEARCH_CERTS_DIRECTORY}/${ELASTICSEARCH_CERTS_FILE}
     volumes:
       - ./es2data:/usr/share/elasticsearch/data
-      - ./certs-creator/certs:${ELASTICSEARCH_DIRECTORY}/config/certs
+      - ./certs-creator/certs:${ELASTICSEARCH_CERTS_DIRECTORY}
     restart: always
     networks:
       - ${NETWORK_NAME}
