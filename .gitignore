@@ -12,6 +12,7 @@
 es1data
 es2data
 es3data
+elasticsearch-certificates.p12
 docker/nginx
 
 # production

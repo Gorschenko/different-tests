@@ -1,52 +1,70 @@
 services:
-  certs-creator:
+  # certs-creator:
+  #   image: elasticsearch:8.4.3
+  #   volumes:
+  #     - ./certs-creator/certs:${ELASTICSEARCH_DIRECTORY}/certs
+  #     - ./certs-creator/create_certs.sh:${ELASTICSEARCH_DIRECTORY}/create_certs.sh
+  #   command: "${ELASTICSEARCH_DIRECTORY}/create_certs.sh"
+  #   networks:
+  #     - ${NETWORK_NAME}
+  es1:
     image: elasticsearch:8.4.3
+    ports:
+      - ${ELASTICSEARCH_PORT}:${ELASTICSEARCH_PORT}
+    environment:
+      - node.name=es1
+      - cluster.name=es-docker-cluster
+      - discovery.seed_hosts=es2
+      - cluster.initial_master_nodes=es1,es2
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - ELASTIC_PASSWORD=${ELASTICSEARCH_SYSTEM_PASSWORD}
+      - xpack.security.enabled=true
+      # Включаем SSL
+      - xpack.security.transport.ssl.enabled=true
+      # Проверяет только сертификаты без адресов (full)
+      - xpack.security.transport.ssl.verification_mode=certificate
+      # Путь к SSL-сертификату и ключу
+      - xpack.security.transport.ssl.keystore.path=${ELASTICSEARCH_CERTS_PATH}
+      # Путь к доверенному сертификату (СА)
+      - xpack.security.transport.ssl.truststore.path=${ELASTICSEARCH_CERTS_PATH}
+      # Аналогично для HTTP
+      - xpack.security.http.ssl.enabled=true
+      - xpack.security.http.ssl.keystore.path=${ELASTICSEARCH_CERTS_PATH}
+      - xpack.security.http.ssl.truststore.path=${ELASTICSEARCH_CERTS_PATH}
     volumes:
-      - ./certs-creator/certs:${ELASTICSEARCH_DIRECTORY}/certs
-      - ./certs-creator/create_certs.sh:${ELASTICSEARCH_DIRECTORY}/create_certs.sh
-    command: "${ELASTICSEARCH_DIRECTORY}/create_certs.sh"
+      - ./es1data:/usr/share/elasticsearch/data
+      - ./certs-creator/certs:${ELASTICSEARCH_DIRECTORY}/config/certs
+    restart: always
     networks:
       - ${NETWORK_NAME}
-  # es1:
-  #   image: elasticsearch:8.4.3
-  #   ports:
-  #     - ${ELASTICSEARCH_PORT}:${ELASTICSEARCH_PORT}
-  #   environment:
-  #     - node.name=es1
-  #     - cluster.name=es-docker-cluster
-  #     - discovery.seed_hosts=es2
-  #     - cluster.initial_master_nodes=es1,es2
-  #     - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-  #     - ELASTIC_PASSWORD=${ELASTICSEARCH_SYSTEM_PASSWORD}
-  #     - xpack.security.enabled=true
-  #     # Включаем SSL
-  #     - xpack.security.transport.ssl.enabled=true
-  #     # Проверка сертификаты, а также адреса
-  #     - xpack.security.transport.ssl.verification_mode=full
-  #     # Путь к SSL-сертификату и ключу
-  #     - xpack.security.transport.ssl.keystore.path=es-node01-cert.p12
-  #     # Путь к доверенному сертификату (СА)
-  #     - xpack.security.transport.ssl.truststore.path=elastic-stack-ca.p12
-  #   volumes:
-  #     - ./es1data:/usr/share/elasticsearch/data
-  #   restart: always
-  #   networks:
-  #     - ${NETWORK_NAME}
-  # es2:
-  #   image: elasticsearch:8.4.3
-  #   environment:
-  #     - node.name=es2
-  #     - cluster.name=es-docker-cluster
-  #     - discovery.seed_hosts=es1
-  #     - cluster.initial_master_nodes=es1,es2
-  #     - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-  #     - ELASTIC_PASSWORD=${ELASTICSEARCH_SYSTEM_PASSWORD}
-  #     - xpack.security.enabled=true
-  #   volumes:
-  #     - ./es2data:/usr/share/elasticsearch/data
-  #   restart: always
-  #   networks:
-  #     - ${NETWORK_NAME}
+  es2:
+    image: elasticsearch:8.4.3
+    environment:
+      - node.name=es2
+      - cluster.name=es-docker-cluster
+      - discovery.seed_hosts=es1
+      - cluster.initial_master_nodes=es1,es2
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - ELASTIC_PASSWORD=${ELASTICSEARCH_SYSTEM_PASSWORD}
+      - xpack.security.enabled=true
+      # Включаем SSL
+      - xpack.security.transport.ssl.enabled=true
+      # Проверяет только сертификаты без адресов (full)
+      - xpack.security.transport.ssl.verification_mode=certificate
+      # Путь к SSL-сертификату и ключу
+      - xpack.security.transport.ssl.keystore.path=${ELASTICSEARCH_CERTS_PATH}
+      # Путь к доверенному сертификату (СА)
+      - xpack.security.transport.ssl.truststore.path=${ELASTICSEARCH_CERTS_PATH}
+      # Аналогично для HTTP
+      - xpack.security.http.ssl.enabled=true
+      - xpack.security.http.ssl.keystore.path=${ELASTICSEARCH_CERTS_PATH}
+      - xpack.security.http.ssl.truststore.path=${ELASTICSEARCH_CERTS_PATH}
+    volumes:
+      - ./es2data:/usr/share/elasticsearch/data
+      - ./certs-creator/certs:${ELASTICSEARCH_DIRECTORY}/config/certs
+    restart: always
+    networks:
+      - ${NETWORK_NAME}
 networks:
   elk:
     name: ${NETWORK_NAME}
