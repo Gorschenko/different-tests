@@ -12,5 +12,3 @@ create_user logstash_writer logstash_writer logstash_writer
 
 set_user_password ${KIBANA_SYSTEM_USER} ${KIBANA_SYSTEM_PASSWORD}
 set_user_password ${LOGSTASH_SYSTEM_USER} ${LOGSTASH_SYSTEM_PASSWORD}
-
-$SHELL
