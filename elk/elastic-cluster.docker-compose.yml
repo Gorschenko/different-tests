@@ -1,87 +1,86 @@
 services:
-  certs-creator:
+  # certs-creator:
+  #   image: elasticsearch:8.4.3
+  #   volumes:
+  #     - ./certs-creator/certs:${ELASTICSEARCH_CERTS_DIRECTORY}
+  #     - ./certs-creator/create_certs.sh:${ELASTICSEARCH_DIRECTORY}/create_certs.sh
+  #   command: "${ELASTICSEARCH_DIRECTORY}/create_certs.sh"
+  #   networks:
+  #     - ${NETWORK_NAME}
+  es1:
     image: elasticsearch:8.4.3
+    ports:
+      - ${ELASTICSEARCH_PORT}:${ELASTICSEARCH_PORT}
+    environment:
+      - node.name=es1
+      - cluster.name=es-docker-cluster
+      - discovery.seed_hosts=es2
+      - cluster.initial_master_nodes=es1,es2
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - ELASTIC_PASSWORD=${ELASTICSEARCH_SYSTEM_PASSWORD}
+      - xpack.security.enabled=true
+      # Включаем SSL между экземплярами ES
+      - xpack.security.transport.ssl.enabled=true
+      # Устанавливаем уровень проверки сертификатов
+      - xpack.security.transport.ssl.verification_mode=certificate
+      # Путь к SSL-сертификату и ключу
+      - xpack.security.transport.ssl.keystore.path=${ELASTICSEARCH_CERTS_DIRECTORY}/${SSL_ES_TRANSPORT_CERTS_FILE}
+      # Путь к доверенному сертификату (СА)
+      - xpack.security.transport.ssl.truststore.path=${ELASTICSEARCH_CERTS_DIRECTORY}/${SSL_ES_TRANSPORT_CERTS_FILE}
+      # Аналогично для HTTP
+      - xpack.security.http.ssl.enabled=true
+      - xpack.security.http.ssl.keystore.path=${ELASTICSEARCH_CERTS_DIRECTORY}/${SSL_ES_HTTPS_CERTS_FILE}
     volumes:
-      - ./certs-creator/certs:${ELASTICSEARCH_DIRECTORY}/certs
-      - ./certs-creator/create_certs.sh:${ELASTICSEARCH_DIRECTORY}/create_certs.sh
-    command: "${ELASTICSEARCH_DIRECTORY}/create_certs.sh"
+      - ./es1data:/usr/share/elasticsearch/data
+      - ./certs-creator/certs:${ELASTICSEARCH_CERTS_DIRECTORY}
+    restart: always
     networks:
       - ${NETWORK_NAME}
-  # es1:
-  #   image: elasticsearch:8.4.3
-  #   ports:
-  #     - ${ELASTICSEARCH_PORT}:${ELASTICSEARCH_PORT}
-  #   environment:
-  #     - node.name=es1
-  #     - cluster.name=es-docker-cluster
-  #     - discovery.seed_hosts=es2
-  #     - cluster.initial_master_nodes=es1,es2
-  #     - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-  #     - ELASTIC_PASSWORD=${ELASTICSEARCH_SYSTEM_PASSWORD}
-  #     - xpack.security.enabled=true
-  #     # Включаем SSL
-  #     - xpack.security.transport.ssl.enabled=true
-  #     # Проверяет только сертификаты без адресов (full)
-  #     - xpack.security.transport.ssl.verification_mode=certificate
-  #     # Путь к SSL-сертификату и ключу
-  #     - xpack.security.transport.ssl.keystore.path=${ELASTICSEARCH_CERTS_DIRECTORY}/${CERTS_FILE}
-  #     # Путь к доверенному сертификату (СА)
-  #     - xpack.security.transport.ssl.truststore.path=${ELASTICSEARCH_CERTS_DIRECTORY}/${CERTS_FILE}
-  #     # Аналогично для HTTP
-  #     # - xpack.security.http.ssl.enabled=true
-  #     # - xpack.security.http.ssl.keystore.path=${ELASTICSEARCH_CERTS_DIRECTORY}/${CERTS_FILE}
-  #     # - xpack.security.http.ssl.truststore.path=${ELASTICSEARCH_CERTS_DIRECTORY}/${CERTS_FILE}
-  #   volumes:
-  #     - ./es1data:/usr/share/elasticsearch/data
-  #     - ./certs-creator/certs:${ELASTICSEARCH_CERTS_DIRECTORY}
-  #   restart: always
-  #   networks:
-  #     - ${NETWORK_NAME}
-  # es2:
-  #   image: elasticsearch:8.4.3
-  #   environment:
-  #     - node.name=es2
-  #     - cluster.name=es-docker-cluster
-  #     - discovery.seed_hosts=es1
-  #     - cluster.initial_master_nodes=es1,es2
-  #     - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-  #     - ELASTIC_PASSWORD=${ELASTICSEARCH_SYSTEM_PASSWORD}
-  #     - xpack.security.enabled=true
-  #     - xpack.security.transport.ssl.enabled=true
-  #     - xpack.security.transport.ssl.verification_mode=certificate
-  #     - xpack.security.transport.ssl.keystore.path=${ELASTICSEARCH_CERTS_DIRECTORY}/${CERTS_FILE}
-  #     - xpack.security.transport.ssl.truststore.path=${ELASTICSEARCH_CERTS_DIRECTORY}/${CERTS_FILE}
-  #     # - xpack.security.http.ssl.enabled=true
-  #     # - xpack.security.http.ssl.keystore.path=${ELASTICSEARCH_CERTS_DIRECTORY}/${CERTS_FILE}
-  #     # - xpack.security.http.ssl.truststore.path=${ELASTICSEARCH_CERTS_DIRECTORY}/${CERTS_FILE}
-  #   volumes:
-  #     - ./es2data:/usr/share/elasticsearch/data
-  #     - ./certs-creator/certs:${ELASTICSEARCH_CERTS_DIRECTORY}
-  #   restart: always
-  #   networks:
-  #     - ${NETWORK_NAME}
-  # kibana:
-  #   image: kibana:8.4.3
-  #   ports:
-  #     - ${KIBANA_PORT}:${KIBANA_PORT}
-  #   environment:
-  #     - ELASTICSEARCH_HOSTS=${ELASTICSEARCH_PROTOCOL}://es1:${ELASTICSEARCH_PORT}
-  #     - ELASTICSEARCH_USERNAME=${KIBANA_SYSTEM_USER}
-  #     - ELASTICSEARCH_PASSWORD=${KIBANA_SYSTEM_PASSWORD}
-  #     - SERVER_SSL_ENABLED=true
-  #     - SERVER_SSL_KEYSTORE_PATH=${KIBANA_CERTS_DIRECTORY}/${CERTS_FILE}
-  #     - SERVER_SSL_KEYSTORE_PASSWORD=""
-  #     - SERVER_SSL_TRUSTSTORE_PATH=${KIBANA_CERTS_DIRECTORY}/${CERTS_FILE}
-  #     - SERVER_SSL_TRUSTSTORE_PASSWORD=""
-  #     - ELASTICSEARCH_SSL_VERIFICATION_MODE=certificate
-  #   volumes:
-  #     - ./certs-creator/certs:${KIBANA_CERTS_DIRECTORY}
-  #   restart: always
-  #   depends_on:
-  #     - es1
-  #     - es2
-  #   networks:
-  #     - ${NETWORK_NAME}
+  es2:
+    image: elasticsearch:8.4.3
+    environment:
+      - node.name=es2
+      - cluster.name=es-docker-cluster
+      - discovery.seed_hosts=es1
+      - cluster.initial_master_nodes=es1,es2
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - ELASTIC_PASSWORD=${ELASTICSEARCH_SYSTEM_PASSWORD}
+      - xpack.security.enabled=true
+      - xpack.security.transport.ssl.enabled=true
+      - xpack.security.transport.ssl.verification_mode=certificate
+      - xpack.security.transport.ssl.keystore.path=${ELASTICSEARCH_CERTS_DIRECTORY}/${SSL_ES_TRANSPORT_CERTS_FILE}
+      - xpack.security.transport.ssl.truststore.path=${ELASTICSEARCH_CERTS_DIRECTORY}/${SSL_ES_TRANSPORT_CERTS_FILE}
+      - xpack.security.http.ssl.enabled=true
+      - xpack.security.http.ssl.keystore.path=${ELASTICSEARCH_CERTS_DIRECTORY}/${SSL_ES_HTTPS_CERTS_FILE}
+    volumes:
+      - ./es2data:/usr/share/elasticsearch/data
+      - ./certs-creator/certs:${ELASTICSEARCH_CERTS_DIRECTORY}
+    restart: always
+    networks:
+      - ${NETWORK_NAME}
+  kibana:
+    image: kibana:8.4.3
+    ports:
+      - ${KIBANA_PORT}:${KIBANA_PORT}
+    environment:
+      - ELASTICSEARCH_HOSTS=${ELASTICSEARCH_PROTOCOL}://es1:${ELASTICSEARCH_PORT}
+      - ELASTICSEARCH_USERNAME=${KIBANA_SYSTEM_USER}
+      - ELASTICSEARCH_PASSWORD=${KIBANA_SYSTEM_PASSWORD}
+      - SERVER_SSL_ENABLED=true
+      - ELASTICSEARCH_SSL_CERTIFICATEAUTHORITIES=${KIBANA_CERTS_DIRECTORY}/${SSL_CLIENT_CERT_FILE}
+      - SERVER_SSL_KEYSTORE_PATH=${KIBANA_CERTS_DIRECTORY}/${SSL_ES_HTTPS_CERTS_FILE}
+      - SERVER_SSL_KEYSTORE_PASSWORD=""
+      - SERVER_SSL_TRUSTSTORE_PATH=${KIBANA_CERTS_DIRECTORY}/${SSL_ES_HTTPS_CERTS_FILE}
+      - SERVER_SSL_TRUSTSTORE_PASSWORD=""
+      - ELASTICSEARCH_SSL_VERIFICATION_MODE=certificate
+    volumes:
+      - ./certs-creator/certs:${KIBANA_CERTS_DIRECTORY}
+    restart: always
+    depends_on:
+      - es1
+      - es2
+    networks:
+      - ${NETWORK_NAME}
 networks:
   elk:
     name: ${NETWORK_NAME}
