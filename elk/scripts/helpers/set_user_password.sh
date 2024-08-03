@@ -7,7 +7,7 @@ set_user_password() {
 
   echo "Set password for user ${user} is started"
 
-  curl -X POST "${url}" \
+  curl -k -X POST "${url}" \
     -H "${content_type}" \
     -u "${ELASTICSEARCH_SYSTEM_USER}:${ELASTICSEARCH_SYSTEM_PASSWORD}" \
     -d "${request_body}"

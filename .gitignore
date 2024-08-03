@@ -12,6 +12,7 @@
 es1data
 es2data
 es3data
+elastic-stack-ca.p12
 elasticsearch-certificates.p12
 docker/nginx
 

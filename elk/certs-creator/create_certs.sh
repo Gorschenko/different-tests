@@ -1,9 +1,9 @@
 # Создаем доверенный сертификат (СА)
-elasticsearch-certutil ca --out elastic-stack-ca.p12 --pass ""
+elasticsearch-certutil ca --out certs/elastic-stack-ca.p12 --pass ""
 
 # Создаем SSL-сертификат и ключ
 elasticsearch-certutil cert \
-    --ca elastic-stack-ca.p12 \
+    --ca certs/elastic-stack-ca.p12 \
     --ca-pass "" \
     --out certs/elasticsearch-certificates.p12 \
     --pass ""

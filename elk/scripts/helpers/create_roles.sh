@@ -14,7 +14,7 @@ create_logstash_writer_role() {
 
   echo "Creation ${role} role is started"
 
-  curl -X POST "${url}" \
+  curl -k -X POST "${url}" \
     -H "${content_type}" \
     -u "${ELASTICSEARCH_SYSTEM_USER}:${ELASTICSEARCH_SYSTEM_PASSWORD}" \
     -d "${request_body}"
@@ -43,7 +43,7 @@ create_kibana_custom_role() {
 
   echo "Creation ${role} role is started"
 
-  curl -X POST "${url}" \
+  curl -k -X POST "${url}" \
     -H "${content_type}" \
     -u "${ELASTICSEARCH_SYSTEM_USER}:${ELASTICSEARCH_SYSTEM_PASSWORD}" \
     -d "${request_body}"
