@@ -28,14 +28,13 @@ elasticsearch-certutil cert \
 # certs/elastic-stack-ca.p12
 # password
 # 12M
-# n for miltiple nodes
-# es1
-# ENTER dns
-# y
-# ENTER ips
-# y
-# n
+# n - generate certs for miltiple nodes
+# kibana - dns for clients
+# ENTER - confirm dns
+# y - confirm dns
+# enter ips (empty field)
+# y - confirm ips
+# n - change info about certs
 # password
 # name of file
 # EOF
-# printf "\n"
