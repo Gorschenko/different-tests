@@ -40,5 +40,5 @@ elasticsearch-certutil cert \
 # Создаем сертификаты для соединения между Клиентами и Kibana по HTTPS 
 
 elasticsearch-certutil cert \
-    -ca config/elasticsearch/elastic-stack-ca.p12 --ca-pass "" \
+    -ca config/certs/elastic-stack-ca.p12 --ca-pass "" \
     --out config/certs/kibana-certificates.p12 --pass ""
