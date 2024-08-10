@@ -16,7 +16,7 @@ services:
       - cluster.name=es-docker-cluster
       - discovery.seed_hosts=es2
       - cluster.initial_master_nodes=es1,es2
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "ES_JAVA_OPTS=-Xms256m -Xmx256m"
       - ELASTIC_PASSWORD=${ELASTICSEARCH_SYSTEM_PASSWORD}
       - xpack.security.enabled=true
       # Включаем SSL между экземплярами ES
@@ -24,12 +24,12 @@ services:
       # Устанавливаем уровень проверки сертификатов
       - xpack.security.transport.ssl.verification_mode=certificate
       # Путь к SSL-сертификату и ключу
-      - xpack.security.transport.ssl.keystore.path=${ELASTICSEARCH_CERTS_DIRECTORY}/${SSL_ES_TRANSPORT_CERTS_FILE}
+      - xpack.security.transport.ssl.keystore.path=${ELASTICSEARCH_CERTS_DIRECTORY}/${ELASTICSEARCH_TRANSPORT_SSL_FILES}
       # Путь к доверенному сертификату (СА)
-      - xpack.security.transport.ssl.truststore.path=${ELASTICSEARCH_CERTS_DIRECTORY}/${SSL_ES_TRANSPORT_CERTS_FILE}
+      - xpack.security.transport.ssl.truststore.path=${ELASTICSEARCH_CERTS_DIRECTORY}/${ELASTICSEARCH_TRANSPORT_SSL_FILES}
       # Аналогично для HTTP
       - xpack.security.http.ssl.enabled=true
-      - xpack.security.http.ssl.keystore.path=${ELASTICSEARCH_CERTS_DIRECTORY}/${SSL_ES_HTTPS_CERTS_FILE}
+      - xpack.security.http.ssl.keystore.path=${ELASTICSEARCH_CERTS_DIRECTORY}/${ELASTICSEARCH_HTTP_SSL_FILES}
     volumes:
       - ./es1data:/usr/share/elasticsearch/data
       - ./certs-creator/certs:${ELASTICSEARCH_CERTS_DIRECTORY}
@@ -43,15 +43,15 @@ services:
       - cluster.name=es-docker-cluster
       - discovery.seed_hosts=es1
       - cluster.initial_master_nodes=es1,es2
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "ES_JAVA_OPTS=-Xms256m -Xmx256m"
       - ELASTIC_PASSWORD=${ELASTICSEARCH_SYSTEM_PASSWORD}
       - xpack.security.enabled=true
       - xpack.security.transport.ssl.enabled=true
       - xpack.security.transport.ssl.verification_mode=certificate
-      - xpack.security.transport.ssl.keystore.path=${ELASTICSEARCH_CERTS_DIRECTORY}/${SSL_ES_TRANSPORT_CERTS_FILE}
-      - xpack.security.transport.ssl.truststore.path=${ELASTICSEARCH_CERTS_DIRECTORY}/${SSL_ES_TRANSPORT_CERTS_FILE}
+      - xpack.security.transport.ssl.keystore.path=${ELASTICSEARCH_CERTS_DIRECTORY}/${ELASTICSEARCH_TRANSPORT_SSL_FILES}
+      - xpack.security.transport.ssl.truststore.path=${ELASTICSEARCH_CERTS_DIRECTORY}/${ELASTICSEARCH_TRANSPORT_SSL_FILES}
       - xpack.security.http.ssl.enabled=true
-      - xpack.security.http.ssl.keystore.path=${ELASTICSEARCH_CERTS_DIRECTORY}/${SSL_ES_HTTPS_CERTS_FILE}
+      - xpack.security.http.ssl.keystore.path=${ELASTICSEARCH_CERTS_DIRECTORY}/${ELASTICSEARCH_HTTP_SSL_FILES}
     volumes:
       - ./es2data:/usr/share/elasticsearch/data
       - ./certs-creator/certs:${ELASTICSEARCH_CERTS_DIRECTORY}
@@ -67,10 +67,10 @@ services:
       - ELASTICSEARCH_USERNAME=${KIBANA_SYSTEM_USER}
       - ELASTICSEARCH_PASSWORD=${KIBANA_SYSTEM_PASSWORD}
       - SERVER_SSL_ENABLED=true
-      - ELASTICSEARCH_SSL_CERTIFICATEAUTHORITIES=${KIBANA_CERTS_DIRECTORY}/${SSL_CLIENT_CERT_FILE}
-      - SERVER_SSL_KEYSTORE_PATH=${KIBANA_CERTS_DIRECTORY}/${SSL_ES_HTTPS_CERTS_FILE}
+      - ELASTICSEARCH_SSL_CERTIFICATEAUTHORITIES=${KIBANA_CERTS_DIRECTORY}/${CLIENTS_SSL_CERT_FILE}
+      - SERVER_SSL_KEYSTORE_PATH=${KIBANA_CERTS_DIRECTORY}/${ELASTICSEARCH_HTTP_SSL_FILES}
       - SERVER_SSL_KEYSTORE_PASSWORD=""
-      - SERVER_SSL_TRUSTSTORE_PATH=${KIBANA_CERTS_DIRECTORY}/${SSL_ES_HTTPS_CERTS_FILE}
+      - SERVER_SSL_TRUSTSTORE_PATH=${KIBANA_CERTS_DIRECTORY}/${ELASTICSEARCH_HTTP_SSL_FILES}
       - SERVER_SSL_TRUSTSTORE_PASSWORD=""
       - ELASTICSEARCH_SSL_VERIFICATION_MODE=certificate
     volumes:
