@@ -81,6 +81,33 @@ services:
       - es2
     networks:
       - ${NETWORK_NAME}
+  logstash:
+    image: logstash:8.4.3
+    environment:
+      - xpack.monitoring.enabled=false
+      - ELASTICSEARCH_USERNAME=${LOGSTASH_SYSTEM_USER}
+      - ELASTICSEARCH_PASSWORD=${LOGSTASH_SYSTEM_PASSWORD}
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    volumes:
+      - ./logstash/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+      - ./certs-creator/certs:${LOGSTASH_CERTS_DIRECTORY}
+    restart: always
+    depends_on:
+      - es1
+      - es2
+    networks:
+      - ${NETWORK_NAME}
+  filebeat:
+    image: elastic/filebeat:8.4.3
+    entrypoint: "filebeat -e -strict.perms=false"
+    volumes:
+      - ./filebeat/config.yml:/usr/share/filebeat/filebeat.yml
+      - ../docker/nginx/logs:/var/logs/nginx:ro
+    restart: always
+    depends_on:
+      - logstash
+    networks:
+      - ${NETWORK_NAME}
 networks:
   elk:
     name: ${NETWORK_NAME}

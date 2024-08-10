@@ -37,14 +37,13 @@ services:
       - ${NETWORK_NAME}
   logstash:
     image: logstash:8.4.3
-    ports:
-      - ${LOGSTASH_PORT}:${LOGSTASH_PORT}
     environment:
     # Отключает мониторинг logstash
       - xpack.monitoring.enabled=false
     # Используется для внутренний аутентификации систем
       - ELASTICSEARCH_USERNAME=${LOGSTASH_SYSTEM_USER}
       - ELASTICSEARCH_PASSWORD=${LOGSTASH_SYSTEM_PASSWORD}
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     volumes:
       - ./logstash/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
     restart: always
