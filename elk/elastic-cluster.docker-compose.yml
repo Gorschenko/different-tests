@@ -16,7 +16,7 @@ services:
       - cluster.name=es-docker-cluster
       - discovery.seed_hosts=es2
       - cluster.initial_master_nodes=es1,es2
-      - "ES_JAVA_OPTS=-Xms256m -Xmx256m"
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
       - ELASTIC_PASSWORD=${ELASTICSEARCH_SYSTEM_PASSWORD}
       - xpack.security.enabled=true
       # Включаем SSL между экземплярами ES
@@ -43,7 +43,7 @@ services:
       - cluster.name=es-docker-cluster
       - discovery.seed_hosts=es1
       - cluster.initial_master_nodes=es1,es2
-      - "ES_JAVA_OPTS=-Xms256m -Xmx256m"
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
       - ELASTIC_PASSWORD=${ELASTICSEARCH_SYSTEM_PASSWORD}
       - xpack.security.enabled=true
       - xpack.security.transport.ssl.enabled=true
@@ -69,9 +69,9 @@ services:
       - SERVER_SSL_ENABLED=true
       - ELASTICSEARCH_SSL_CERTIFICATEAUTHORITIES=${KIBANA_CERTS_DIRECTORY}/${CLIENTS_SSL_CERT_FILE}
       - SERVER_SSL_KEYSTORE_PATH=${KIBANA_CERTS_DIRECTORY}/${KIBANA_HTTP_SSL_FILES}
-      # - SERVER_SSL_KEYSTORE_PASSWORD=""
+      - SERVER_SSL_KEYSTORE_PASSWORD=""
       - SERVER_SSL_TRUSTSTORE_PATH=${KIBANA_CERTS_DIRECTORY}/${KIBANA_HTTP_SSL_FILES}
-      # - SERVER_SSL_TRUSTSTORE_PASSWORD=""
+      - SERVER_SSL_TRUSTSTORE_PASSWORD=""
       - ELASTICSEARCH_SSL_VERIFICATION_MODE=certificate
     volumes:
       - ./certs-creator/certs:${KIBANA_CERTS_DIRECTORY}

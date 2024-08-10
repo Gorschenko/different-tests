@@ -27,7 +27,7 @@ elasticsearch-certutil cert \
 # password
 # 12M
 # n - generate certs for miltiple nodes
-# es* - dns of nodes
+# es1 - dns of nodes, which kibana or logstash will be connect
 # ENTER - confirm dns
 # y - confirm dns
 # enter ips (empty field)
