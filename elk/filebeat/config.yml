@@ -8,4 +8,7 @@ filebeat.inputs:
 output.logstash:
   enabled: true
   hosts:
-    - logstash:5044
+    - "logstash:${LOGSTASH_PORT}"
+  ssl:
+    certificate_authorities: ["${FILEBEAT_CERTS_DIRECTORY}/${LOGSTASH_HTTP_SSL_CERT}"]
+    verification_mode: certificate

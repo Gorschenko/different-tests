@@ -43,7 +43,6 @@ services:
     # Используется для внутренний аутентификации систем
       - ELASTICSEARCH_USERNAME=${LOGSTASH_SYSTEM_USER}
       - ELASTICSEARCH_PASSWORD=${LOGSTASH_SYSTEM_PASSWORD}
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     volumes:
       - ./logstash/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
     restart: always

@@ -42,3 +42,11 @@ elasticsearch-certutil cert \
 elasticsearch-certutil cert \
     -ca config/certs/elastic-stack-ca.p12 --ca-pass "" \
     --out config/certs/kibana-certificates.p12 --pass ""
+
+# Создаем сертификаты для соединения Beats и Logstash по HTTPS
+# elasticsearch-certutil cert --pem --ca config/certs/elastic-stack-ca.p12 --ca-pass "" --out config/certs/logstash.zip
+# unzip config/certs/logstash.zip -d config/certs/logstash
+# mv config/certs/logstash/instance/instance.key config/certs/logstash.key
+# mv config/certs/logstash/instance/instance.crt config/certs/logstash.crt
+# rm -r config/certs/logstash
+# rm config/certs/logstash.zip
