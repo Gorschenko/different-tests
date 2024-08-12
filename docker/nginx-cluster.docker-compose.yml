@@ -1,0 +1,25 @@
+services:
+  nginx:
+    image: nginx:stable-alpine
+    ports:
+      - ${NGINX_PORT}:80
+    volumes:
+      - ../elk/nginx/nginx.conf:${NGINX_INNER_PATH_TO_CONF}
+      - ${NGINX_EXTERNAL_PATH_TO_LOGS}:${NGINX_INNER_PATH_TO_LOGS}
+    restart: always
+  nginx2:
+    image: nginx:stable-alpine
+    ports:
+      - ${NGINX2_PORT}:80
+    volumes:
+      - ../elk/nginx/nginx.conf:${NGINX_INNER_PATH_TO_CONF}
+      - ${NGINX2_EXTERNAL_PATH_TO_LOGS}:${NGINX_INNER_PATH_TO_LOGS}
+    restart: always
+  nginx3:
+    image: nginx:stable-alpine
+    ports:
+      - ${NGINX3_PORT}:80
+    volumes:
+      - ../elk/nginx/nginx.conf:${NGINX_INNER_PATH_TO_CONF}
+      - ${NGINX3_EXTERNAL_PATH_TO_LOGS}:${NGINX_INNER_PATH_TO_LOGS}
+    restart: always

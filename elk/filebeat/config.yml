@@ -1,10 +1,19 @@
 filebeat.inputs:
   - type: log
-    enabled: true
     paths:
       - /var/logs/nginx/*.log
-    # tags:
-    #   - nginx-access
+    tags:
+      - nginx
+  - type: log
+    paths:
+      - /var/logs/nginx2/*.log
+    tags:
+      - nginx2
+  - type: log
+    paths:
+      - /var/logs/nginx3/*.log
+    tags:
+      - nginx3
 output.elasticsearch:
   hosts:
     - "${ELASTICSEARCH_PROTOCOL}://es1:${ELASTICSEARCH_PORT}"

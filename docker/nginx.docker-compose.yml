@@ -9,8 +9,7 @@ services:
       # - 81:81
       # - 8080:8080
     volumes:
-      - ../elk/nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ./nginx/logs:/var/log/nginx
+      - ../nginx/cors/nginx.conf:${NGINX_INNER_PATH_TO_CONF}
       # for static lesson
       # - ../public/favicon.ico:/opt/www/files/favicon.ico
       # - ../public/index.html:/opt/www/files/index.html

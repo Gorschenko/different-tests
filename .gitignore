@@ -13,6 +13,8 @@ es1data
 es2data
 es3data
 docker/nginx
+docker/nginx2
+docker/nginx3
 
 # production
 /build
