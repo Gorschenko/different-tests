@@ -1,12 +1,12 @@
-create_logstash_writer_role() {
-  local role="logstash_writer"
+create_writer_role() {
+  local role="writer"
   local url="${ELASTICSEARCH_URL}/_security/role/${role}"
   local content_type="Content-Type: application/json"
   local request_body='{
     "cluster": ["manage_index_templates", "monitor", "manage_ilm"],
     "indices": [
       {
-        "names": ["logstash-*"],
+        "names": ["*"],
         "privileges": ["write","create","create_index","manage","manage_ilm"]
       }
     ]
@@ -20,8 +20,8 @@ create_logstash_writer_role() {
     -d "${request_body}"
 }
 
-create_kibana_custom_role() {
-  local role="kibana_custom"
+create_monitor_role() {
+  local role="monitor"
   local url="${ELASTICSEARCH_URL}/_security/role/${role}"
   local content_type="Content-Type: application/json"
   local request_body='{

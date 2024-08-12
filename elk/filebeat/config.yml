@@ -7,7 +7,7 @@ filebeat.inputs:
     #   - nginx-access
 output.elasticsearch:
   hosts:
-    - "es1:${ELASTICSEARCH_PORT}"
+    - "${ELASTICSEARCH_PROTOCOL}://es1:${ELASTICSEARCH_PORT}"
   ssl:
     certificate_authorities: ["${FILEBEAT_CERTS_DIRECTORY}/${FILEBEAT_SSL_CERT_FILE}"]
     verification_mode: certificate
