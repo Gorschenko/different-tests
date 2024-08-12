@@ -5,10 +5,11 @@ filebeat.inputs:
       - /var/logs/nginx/*.log
     # tags:
     #   - nginx-access
-output.logstash:
-  enabled: true
+output.elasticsearch:
   hosts:
-    - "logstash:${LOGSTASH_PORT}"
+    - "es1:${ELASTICSEARCH_PORT}"
   ssl:
-    certificate_authorities: ["${FILEBEAT_CERTS_DIRECTORY}/${LOGSTASH_HTTP_SSL_CERT}"]
+    certificate_authorities: ["${FILEBEAT_CERTS_DIRECTORY}/${FILEBEAT_SSL_CERT_FILE}"]
     verification_mode: certificate
+  username: ${FILEBEAT_USER}
+  password: ${FILEBEAT_PASSWORD}

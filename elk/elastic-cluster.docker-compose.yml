@@ -81,45 +81,47 @@ services:
       - es2
     networks:
       - ${NETWORK_NAME}
-  logstash:
-    image: logstash:8.4.3
-    environment:
-      - xpack.monitoring.enabled=false
-      - ELASTICSEARCH_USERNAME=${LOGSTASH_SYSTEM_USER}
-      - ELASTICSEARCH_PASSWORD=${LOGSTASH_SYSTEM_PASSWORD}
-      - LOGSTASH_PORT=${LOGSTASH_PORT}
-      - ELASTICSEARCH_PROTOCOL=${ELASTICSEARCH_PROTOCOL}
-      - ELASTICSEARCH_PORT=${ELASTICSEARCH_PORT}
-      - LOGSTASH_CERTS_DIRECTORY=${LOGSTASH_CERTS_DIRECTORY}
-      - ELASTICSEARCH_CLIENTS_SSL_CERT_FILE=${ELASTICSEARCH_CLIENTS_SSL_CERT_FILE}
-      - LOGSTASH_HTTP_SSL_CERT=${LOGSTASH_HTTP_SSL_CERT}
-      - LOGSTASH_HTTP_SSL_KEY=${LOGSTASH_HTTP_SSL_KEY}
-      - LOGSTASH_CUSTOM_USER=${LOGSTASH_CUSTOM_USER}
-      - LOGSTASH_CUSTOM_USER_PASSWORD=${LOGSTASH_CUSTOM_USER_PASSWORD}
-    volumes:
-      - ./logstash/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
-      - ./certs-creator/certs:${LOGSTASH_CERTS_DIRECTORY}
-    restart: always
-    depends_on:
-      - es1
-      - es2
-    networks:
-      - ${NETWORK_NAME}
-  # filebeat:
-  #   image: elastic/filebeat:8.4.3
-  #   entrypoint: "filebeat -e -strict.perms=false"
+  # logstash:
+  #   image: logstash:8.4.3
   #   environment:
-  #     - FILEBEAT_CERTS_DIRECTORY=${FILEBEAT_CERTS_DIRECTORY}
-  #     - LOGSTASH_HTTP_SSL_CERT=${LOGSTASH_HTTP_SSL_CERT}
+  #     - xpack.monitoring.enabled=false
+  #     - ELASTICSEARCH_USERNAME=${LOGSTASH_SYSTEM_USER}
+  #     - ELASTICSEARCH_PASSWORD=${LOGSTASH_SYSTEM_PASSWORD}
+  #     - LOGSTASH_PORT=${LOGSTASH_PORT}
+  #     - ELASTICSEARCH_PROTOCOL=${ELASTICSEARCH_PROTOCOL}
+  #     - ELASTICSEARCH_PORT=${ELASTICSEARCH_PORT}
+  #     - LOGSTASH_CERTS_DIRECTORY=${LOGSTASH_CERTS_DIRECTORY}
+  #     - ELASTICSEARCH_CLIENTS_SSL_CERT_FILE=${ELASTICSEARCH_CLIENTS_SSL_CERT_FILE}
+  #     - LOGSTASH_USER=${LOGSTASH_USER}
+  #     - LOGSTASH_PASSWORD=${LOGSTASH_PASSWORD}
   #   volumes:
-  #     - ./filebeat/config.yml:/usr/share/filebeat/filebeat.yml
-  #     - ../docker/nginx/logs:/var/logs/nginx:ro
-  #     - ./certs-creator/certs:${FILEBEAT_CERTS_DIRECTORY}
+  #     - ./logstash/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+  #     - ./certs-creator/certs:${LOGSTASH_CERTS_DIRECTORY}
   #   restart: always
   #   depends_on:
-  #     - logstash
+  #     - es1
+  #     - es2
   #   networks:
   #     - ${NETWORK_NAME}
+  filebeat:
+    image: elastic/filebeat:8.4.3
+    entrypoint: "filebeat -e -strict.perms=false"
+    environment:
+      - FILEBEAT_CERTS_DIRECTORY=${FILEBEAT_CERTS_DIRECTORY}
+      - FILEBEAT_SSL_CERT_FILE=${ELASTICSEARCH_CLIENTS_SSL_CERT_FILE}
+      - ELASTICSEARCH_PROTOCOL=${ELASTICSEARCH_PROTOCOL}
+      - ELASTICSEARCH_PORT=${ELASTICSEARCH_PORT}
+      - FILEBEAT_USER=${LOGSTASH_USER}
+      - FILEBEAT_PASSWORD=${LOGSTASH_PASSWORD}
+    volumes:
+      - ./filebeat/config.yml:/usr/share/filebeat/filebeat.yml
+      - ../docker/nginx/logs:/var/logs/nginx:ro
+      - ./certs-creator/certs:${FILEBEAT_CERTS_DIRECTORY}
+    restart: always
+    # depends_on:
+    #   - logstash
+    networks:
+      - ${NETWORK_NAME}
 networks:
   elk:
     name: ${NETWORK_NAME}

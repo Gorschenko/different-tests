@@ -8,7 +8,6 @@
 - + Настроить подключение клиента к Kibana через TLS.
 - + Настроить подключение Logstash к ES через SSL.
 - Настроить покдлючение Beats к Logstash через SSL.
-https://www.elastic.co/guide/en/fleet/current/secure-logstash-connections.html
 - Написать развернутную инструкцию по деплою кластера Elastcisearch.
 - Изучить тему алертинга по каким-либо критериям на основе логов.
 - Изучить синтаксис Logstash для продвинутой работы с логами.
