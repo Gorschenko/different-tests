@@ -1,24 +1,28 @@
 
-# Создаем сертификаты для соединения между экземплярами ES по HTTPS
+# 1. Создаем сертификаты для взаимодействия между узлами ES
 
-# Создаем доверенный сертификат (СА)
+# 1. Создаем доверенный сертификат (СА)
 elasticsearch-certutil ca --out config/certs/elastic-stack-ca.p12 --pass ""
 
-# Создаем SSL-сертификат и ключ
+# 2. Создаем сертификат сервера (для всех узлов ES)
 elasticsearch-certutil cert \
     --ca config/certs/elastic-stack-ca.p12 --ca-pass "" \
     --out config/certs/elasticsearch-certificates.p12 --pass ""
-    # Если указать, то создаcт сертификаты и ключи для каждого узла.
-    # Далее можно установить мод, который будет проверять не только сертификаты, но
-    # и адреса узлов, перечисленных в файле - full
-    # --in certs/instances.yml
-    # --out certs/elasticsearch-certificates.zip \
-    # --pass ""
+
+# Можно добавить проверку по ip или dns - это улучшит систему безопаности.
+# Для этого нужно докинуть ключи в cli:
+# elasticsearch-certutil cert \
+# --ca config/certs/elastic-stack-ca.p12 --ca-pass "" \
+# --in certs/instances.yml \
+# --out certs/elasticsearch-certificates.zip \
+# --pass ""
+
 # Далее необходимо разархивировать
 # unzip certs/elasticsearch-certificates.zip -d certs
+# Удаляем ненужный архив
 # rm certs/elasticsearch-certificates.zip 
 
-# Создаем сертификаты для подключения Kibana, Logstash и ES по HTTPS
+# 3. Создаем сертификат сервера (для всех узлов ES) и корневой сертификат клиента (Kibana, Logstash, Beats)
 
 # elasticsearch-certutil http <<EOF
 # n
@@ -27,7 +31,7 @@ elasticsearch-certutil cert \
 # password
 # 12M
 # n - generate certs for miltiple nodes
-# es1 - dns of nodes, which kibana or logstash will be connect
+# es1,es2 - dns of nodes, which kibana or logstash will be connect
 # ENTER - confirm dns
 # y - confirm dns
 # enter ips (empty field)
@@ -37,8 +41,7 @@ elasticsearch-certutil cert \
 # name of file
 # EOF
 
-# Создаем сертификаты для соединения между Клиентами и Kibana по HTTPS 
-
+# 4. Создаем сертифиат сервера (для Kibana) и Клиентами браузера
 elasticsearch-certutil cert \
     -ca config/certs/elastic-stack-ca.p12 --ca-pass "" \
     --out config/certs/kibana-certificates.p12 --pass ""
