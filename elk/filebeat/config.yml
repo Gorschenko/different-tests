@@ -2,18 +2,36 @@ filebeat.inputs:
   - type: log
     paths:
       - /var/logs/nginx/*.log
-    tags:
-      - nginx
+    # Добавляет тэг к логам, по которому можно фильтроваться
+    tags: ["nginx"]
   - type: log
     paths:
       - /var/logs/nginx2/*.log
-    tags:
-      - nginx2
+    tags: ["nginx2"]
   - type: log
     paths:
       - /var/logs/nginx3/*.log
-    tags:
-      - nginx3
+    tags: ["nginx3"]
+processors:
+  # Если лог будет включать указанное слово, то он не будет отправлен в ES
+  # Отбрасывание error-логов сделано для примера
+  - drop_event:
+      when:
+        contains:
+          message: "[error]"
+  # Исключает поля. В данном случае метаданные Filebeat
+  - drop_fields:
+      fields: ["agent", "ecs", "log", "input", "host"]
+      # Если true, то не вернет ошибку, если тэг будет отсутствовать
+      ignore_missing: true
+  # Разбивает поле на другие переменные
+  # - dissect:
+      # tokenizer: "%{host} - %{different}"
+      # Необязательное поле, так как по дефолту поле message
+      # field: message
+      # Добавляет префикс к каждой переменной после разбора. По умолчанию - dissect
+      # target_prefix: ""
+
 output.elasticsearch:
   hosts:
     - "${ELASTICSEARCH_PROTOCOL}://es1:${ELASTICSEARCH_PORT}"

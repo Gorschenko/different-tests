@@ -94,8 +94,8 @@ services:
     volumes:
       - ./filebeat/config.yml:/usr/share/filebeat/filebeat.yml
       - ../docker/nginx/logs:/var/logs/nginx:ro
-      - ../docker/nginx2/logs:/var/logs/nginx:ro
-      - ../docker/nginx3/logs:/var/logs/nginx:ro
+      - ../docker/nginx2/logs:/var/logs/nginx2:ro
+      - ../docker/nginx3/logs:/var/logs/nginx3:ro
       - ./certs-creator/certs:${FILEBEAT_CERTS_DIRECTORY}
     restart: always
     depends_on:
