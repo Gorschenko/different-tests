@@ -1,6 +1,6 @@
 create_writer_role() {
   local role="writer"
-  local url="${ELASTICSEARCH_URL}/_security/role/${role}"
+  local url="${ES_URL}/_security/role/${role}"
   local content_type="Content-Type: application/json"
   local request_body='{
     "cluster": ["manage_index_templates", "monitor", "manage_ilm"],
@@ -16,13 +16,13 @@ create_writer_role() {
 
   curl -k -X POST "${url}" \
     -H "${content_type}" \
-    -u "${ELASTICSEARCH_SYSTEM_USER}:${ELASTICSEARCH_SYSTEM_PASSWORD}" \
+    -u "${ES_SYSTEM_USER}:${ES_SYSTEM_PASSWORD}" \
     -d "${request_body}"
 }
 
 create_monitor_role() {
   local role="monitor"
-  local url="${ELASTICSEARCH_URL}/_security/role/${role}"
+  local url="${ES_URL}/_security/role/${role}"
   local content_type="Content-Type: application/json"
   local request_body='{
     "cluster": [],
@@ -45,6 +45,6 @@ create_monitor_role() {
 
   curl -k -X POST "${url}" \
     -H "${content_type}" \
-    -u "${ELASTICSEARCH_SYSTEM_USER}:${ELASTICSEARCH_SYSTEM_PASSWORD}" \
+    -u "${ES_SYSTEM_USER}:${ES_SYSTEM_PASSWORD}" \
     -d "${request_body}"
 }

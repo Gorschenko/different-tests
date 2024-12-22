@@ -1,7 +1,7 @@
 source "./envs/.elk.env"
-source "./elk/scripts/helpers/create_roles.sh"
-source "./elk/scripts/helpers/create_user.sh"
-source "./elk/scripts/helpers/set_user_password.sh"
+source "./elk/scripts/utils/create_roles.sh"
+source "./elk/scripts/utils/create_user.sh"
+source "./elk/scripts/utils/set_user_password.sh"
 
 create_writer_role
 create_monitor_role

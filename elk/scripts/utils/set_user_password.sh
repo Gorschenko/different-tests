@@ -1,7 +1,7 @@
 set_user_password() {
   local user=$1
   local password=$2
-  local url="${ELASTICSEARCH_URL}/_security/user/${user}/_password"
+  local url="${ES_URL}/_security/user/${user}/_password"
   local content_type="Content-Type: application/json"
   local request_body='{"password": "'$2'"}'
 
@@ -9,6 +9,6 @@ set_user_password() {
 
   curl -k -X POST "${url}" \
     -H "${content_type}" \
-    -u "${ELASTICSEARCH_SYSTEM_USER}:${ELASTICSEARCH_SYSTEM_PASSWORD}" \
+    -u "${ES_SYSTEM_USER}:${ES_SYSTEM_PASSWORD}" \
     -d "${request_body}"
 }
