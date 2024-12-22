@@ -2,59 +2,59 @@ services:
   # certs-creator:
   #   image: elasticsearch:8.4.3
   #   volumes:
-  #     - ./certs-creator/certs:${ELASTICSEARCH_CERTS_DIRECTORY}
-  #     - ./certs-creator/create_certs.sh:${ELASTICSEARCH_DIRECTORY}/create_certs.sh
-  #   command: "${ELASTICSEARCH_DIRECTORY}/create_certs.sh"
+  #     - ./certs-creator/certs:${ES_CERTS_DIRECTORY}
+  #     - ./certs-creator/create_certs.sh:${ES_DIRECTORY}/create_certs.sh
+  #   command: "${ES_DIRECTORY}/create_certs.sh"
   #   networks:
   #     - ${NETWORK_NAME}
   es1:
     image: elasticsearch:8.4.3
     ports:
-      - ${ELASTICSEARCH_PORT}:${ELASTICSEARCH_PORT}
+      - ${ES_PORT}:${ES_PORT}
     environment:
-      - node.name=es1
+      - node.name=${ES_1_NODE_NAME}
       - cluster.name=es-docker-cluster
-      - discovery.seed_hosts=es2
-      - cluster.initial_master_nodes=es1,es2
+      - discovery.seed_hosts=${ES_2_NODE_NAME}
+      - cluster.initial_master_nodes=${ES_1_NODE_NAME},${ES_2_NODE_NAME}
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-      - ELASTIC_PASSWORD=${ELASTICSEARCH_SYSTEM_PASSWORD}
+      - ELASTIC_PASSWORD=${ES_SYSTEM_PASSWORD}
       - xpack.security.enabled=true
       # Включаем SSL между экземплярами ES
       - xpack.security.transport.ssl.enabled=true
       # Устанавливаем уровень проверки сертификатов
       - xpack.security.transport.ssl.verification_mode=certificate
       # Путь к SSL-сертификату и ключу
-      - xpack.security.transport.ssl.keystore.path=${ELASTICSEARCH_CERTS_DIRECTORY}/${ELASTICSEARCH_TRANSPORT_SSL_FILES}
+      - xpack.security.transport.ssl.keystore.path=${ES_CERTS_DIRECTORY}/${ES_TRANSPORT_SSL_FILES}
       # Путь к доверенному сертификату (СА)
-      - xpack.security.transport.ssl.truststore.path=${ELASTICSEARCH_CERTS_DIRECTORY}/${ELASTICSEARCH_TRANSPORT_SSL_FILES}
+      - xpack.security.transport.ssl.truststore.path=${ES_CERTS_DIRECTORY}/${ES_TRANSPORT_SSL_FILES}
       # Аналогично для HTTP
       - xpack.security.http.ssl.enabled=true
-      - xpack.security.http.ssl.keystore.path=${ELASTICSEARCH_CERTS_DIRECTORY}/${ELASTICSEARCH_HTTP_SSL_FILES}
+      - xpack.security.http.ssl.keystore.path=${ES_CERTS_DIRECTORY}/${ES_HTTP_SSL_FILES}
     volumes:
-      - ./es1data:/usr/share/elasticsearch/data
-      - ./certs-creator/certs:${ELASTICSEARCH_CERTS_DIRECTORY}
+      - ./${ES_1_NODE_NAME}data:/usr/share/elasticsearch/data
+      - ./certs-creator/certs:${ES_CERTS_DIRECTORY}
     restart: always
     networks:
       - ${NETWORK_NAME}
   es2:
     image: elasticsearch:8.4.3
     environment:
-      - node.name=es2
+      - node.name=${ES_2_NODE_NAME}
       - cluster.name=es-docker-cluster
-      - discovery.seed_hosts=es1
-      - cluster.initial_master_nodes=es1,es2
+      - discovery.seed_hosts=${ES_1_NODE_NAME}
+      - cluster.initial_master_nodes=${ES_1_NODE_NAME},${ES_2_NODE_NAME}
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-      - ELASTIC_PASSWORD=${ELASTICSEARCH_SYSTEM_PASSWORD}
+      - ELASTIC_PASSWORD=${ES_SYSTEM_PASSWORD}
       - xpack.security.enabled=true
       - xpack.security.transport.ssl.enabled=true
       - xpack.security.transport.ssl.verification_mode=certificate
-      - xpack.security.transport.ssl.keystore.path=${ELASTICSEARCH_CERTS_DIRECTORY}/${ELASTICSEARCH_TRANSPORT_SSL_FILES}
-      - xpack.security.transport.ssl.truststore.path=${ELASTICSEARCH_CERTS_DIRECTORY}/${ELASTICSEARCH_TRANSPORT_SSL_FILES}
+      - xpack.security.transport.ssl.keystore.path=${ES_CERTS_DIRECTORY}/${ES_TRANSPORT_SSL_FILES}
+      - xpack.security.transport.ssl.truststore.path=${ES_CERTS_DIRECTORY}/${ES_TRANSPORT_SSL_FILES}
       - xpack.security.http.ssl.enabled=true
-      - xpack.security.http.ssl.keystore.path=${ELASTICSEARCH_CERTS_DIRECTORY}/${ELASTICSEARCH_HTTP_SSL_FILES}
+      - xpack.security.http.ssl.keystore.path=${ES_CERTS_DIRECTORY}/${ES_HTTP_SSL_FILES}
     volumes:
-      - ./es2data:/usr/share/elasticsearch/data
-      - ./certs-creator/certs:${ELASTICSEARCH_CERTS_DIRECTORY}
+      - ./${ES_2_NODE_NAME}data:/usr/share/elasticsearch/data
+      - ./certs-creator/certs:${ES_CERTS_DIRECTORY}
     restart: always
     networks:
       - ${NETWORK_NAME}
@@ -63,22 +63,22 @@ services:
     ports:
       - ${KIBANA_PORT}:${KIBANA_PORT}
     environment:
-      - ELASTICSEARCH_HOSTS=${ELASTICSEARCH_PROTOCOL}://es1:${ELASTICSEARCH_PORT}
-      - ELASTICSEARCH_USERNAME=${KIBANA_SYSTEM_USER}
-      - ELASTICSEARCH_PASSWORD=${KIBANA_SYSTEM_PASSWORD}
+      - ES_HOSTS=${ES_PROTOCOL}://${ES_1_NODE_NAME}:${ES_PORT}
+      - ES_USERNAME=${KIBANA_SYSTEM_USER}
+      - ES_PASSWORD=${KIBANA_SYSTEM_PASSWORD}
       - SERVER_SSL_ENABLED=true
-      - ELASTICSEARCH_SSL_CERTIFICATEAUTHORITIES=${KIBANA_CERTS_DIRECTORY}/${ELASTICSEARCH_CLIENTS_SSL_CERT_FILE}
+      - ES_SSL_CERTIFICATEAUTHORITIES=${KIBANA_CERTS_DIRECTORY}/${ES_CLIENTS_SSL_CERT_FILE}
       - SERVER_SSL_KEYSTORE_PATH=${KIBANA_CERTS_DIRECTORY}/${KIBANA_HTTP_SSL_FILES}
       - SERVER_SSL_KEYSTORE_PASSWORD=""
       - SERVER_SSL_TRUSTSTORE_PATH=${KIBANA_CERTS_DIRECTORY}/${KIBANA_HTTP_SSL_FILES}
       - SERVER_SSL_TRUSTSTORE_PASSWORD=""
-      - ELASTICSEARCH_SSL_VERIFICATION_MODE=certificate
+      - ES_SSL_VERIFICATION_MODE=certificate
     volumes:
       - ./certs-creator/certs:${KIBANA_CERTS_DIRECTORY}
     restart: always
     depends_on:
-      - es1
-      - es2
+      - ${ES_1_NODE_NAME}
+      - ${ES_2_NODE_NAME}
     networks:
       - ${NETWORK_NAME}
   filebeat:
@@ -86,9 +86,9 @@ services:
     entrypoint: "filebeat -e -strict.perms=false"
     environment:
       - FILEBEAT_CERTS_DIRECTORY=${FILEBEAT_CERTS_DIRECTORY}
-      - FILEBEAT_SSL_CERT_FILE=${ELASTICSEARCH_CLIENTS_SSL_CERT_FILE}
-      - ELASTICSEARCH_PROTOCOL=${ELASTICSEARCH_PROTOCOL}
-      - ELASTICSEARCH_PORT=${ELASTICSEARCH_PORT}
+      - FILEBEAT_SSL_CERT_FILE=${ES_CLIENTS_SSL_CERT_FILE}
+      - ES_PROTOCOL=${ES_PROTOCOL}
+      - ES_PORT=${ES_PORT}
       - FILEBEAT_USER=${FILEBEAT_USER}
       - FILEBEAT_PASSWORD=${FILEBEAT_PASSWORD}
     volumes:
@@ -99,8 +99,8 @@ services:
       - ./certs-creator/certs:${FILEBEAT_CERTS_DIRECTORY}
     restart: always
     depends_on:
-      - es1
-      - es2
+      - ${ES_1_NODE_NAME}
+      - ${ES_2_NODE_NAME}
     networks:
       - ${NETWORK_NAME}
 networks:
