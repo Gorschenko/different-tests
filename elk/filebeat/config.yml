@@ -34,7 +34,7 @@ processors:
 
 output.elasticsearch:
   hosts:
-    - "${ES_PROTOCOL}://es1:${ES_PORT}"
+    - "${ES_PROTOCOL}://${ES_1_NODE_NAME}:${ES_PORT}"
   ssl:
     certificate_authorities: ["${FILEBEAT_CERTS_DIRECTORY}/${FILEBEAT_SSL_CERT_FILE}"]
     verification_mode: certificate
