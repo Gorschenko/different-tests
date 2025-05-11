@@ -1,0 +1,19 @@
+groups:
+  # С интервалом 10 сек будет выполняться запрос up == 0
+  # Если условие будет выполняться в течение 1 мин, то
+  # Уведомление сработает
+- name: instances
+  interval: 10s
+  rules:
+  - alert: InstanceDown
+    expr: up == 0
+    for: 1m
+    # Подходит для группировки событий, на основе которых
+    # будут выбираться каналы связи
+    labels:
+      severity: critical
+      # Кол-во тегов в метрике
+      labelscount: "{{ len $labels }}"
+    annotations:
+      summary: Instance {{ $labels.instance }} is down!
+      description: "{{ $labels.instance }} of job {{ $labels.job }} has been down for 1 minute."

@@ -1,5 +1,7 @@
 global:
   scrape_interval: 15s
+  # Интервал проверки правил уведомлений
+  evaluation_interval: 15s
 
 scrape_configs:
   - job_name: "prometheus"
@@ -27,3 +29,5 @@ scrape_configs:
     - files:
       - "/opt/targets/*.json"
       refresh_interval: "1m"
+rule_files:
+  - "alerts.yml"
