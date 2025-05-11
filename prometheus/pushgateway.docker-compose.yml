@@ -1,0 +1,18 @@
+services:
+  pushgateway:
+    image: prom/pushgateway:latest
+    command:
+      # Сохранение метрик в файл
+      - "--persistence.file=/data/metrics.data"
+      # Период сохранения метрик в файл
+      - "--persistence.interval=5m"
+    ports:
+      - ${PUSHGATEWAY_PORT}:${PUSHGATEWAY_PORT}
+    volumes:
+      - ${PUSHGATEWAY_HOST_DATA_DIRECTORY}:/data
+    networks:
+      - ${NETWORK_NAME}
+networks:
+  telematic:
+    name: ${NETWORK_NAME}
+    external: ${IS_NETWORK_EXTERNAL}

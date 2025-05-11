@@ -2,7 +2,7 @@ services:
   prometheus:
     image: prom/prometheus:latest
     command:
-      - "--config.file=${PROMETHEUS_CONFIG_PATH}"
+      - "--config.file=/etc/prometheus/prometheus.yml"
       # Очищение старых данных
       - "--storage.tsdb.retention.time=15d"
       # Очищение старых данных
@@ -10,11 +10,12 @@ services:
     ports:
       - ${PROMETHEUS_PORT}:${PROMETHEUS_PORT}
     volumes:
-      - ./prometheus.yml:${PROMETHEUS_CONFIG_PATH}
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
       - ${PROMETHEUS_HOST_DATA_DIRECTORY}:/prometheus
     restart: always
     networks:
       - ${NETWORK_NAME}
+
 networks:
   telematic:
     name: ${NETWORK_NAME}
