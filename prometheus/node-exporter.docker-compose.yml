@@ -12,3 +12,9 @@ services:
       - /sys:${NODE_EXPORTER_HOST_SYS_DIRECTORY}:ro
       - /:${NODE_EXPORTER_HOST_FS_DIRECTORY}:ro
     restart: always
+    networks:
+      - ${NETWORK_NAME}
+networks:
+  telematic:
+    name: ${NETWORK_NAME}
+    external: ${IS_NETWORK_EXTERNAL}

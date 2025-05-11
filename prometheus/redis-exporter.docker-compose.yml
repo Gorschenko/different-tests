@@ -7,8 +7,8 @@ services:
       - ${REDIS_EXPORTER_PORT}:${REDIS_EXPORTER_PORT}
     restart: always
     networks:
-      - telematic
+      - ${NETWORK_NAME}
 networks:
   telematic:
-    name: telematic
-    external: true
+    name: ${NETWORK_NAME}
+    external: ${IS_NETWORK_EXTERNAL}

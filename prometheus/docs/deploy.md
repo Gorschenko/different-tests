@@ -1,5 +1,3 @@
-# Deploy
-
 ## Prometheus
 
 ### Запуск Prometheus
