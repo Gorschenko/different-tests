@@ -15,6 +15,7 @@ es3data
 docker/nginx
 docker/nginx2
 docker/nginx3
+prometheus_data
 
 # production
 /build
