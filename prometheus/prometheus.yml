@@ -15,5 +15,8 @@ scrape_configs:
     static_configs:
       - targets: ["redis_exporter:9121"]
   - job_name: "pushgateway"
+    # Запрещает Prometheus подставлять свои теги.
+    # Мы их указываем сами при отправке в Pushgatwey
+    honor_labels: true
     static_configs:
       - targets: ["pushgateway:9091"]
