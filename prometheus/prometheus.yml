@@ -20,3 +20,10 @@ scrape_configs:
     honor_labels: true
     static_configs:
       - targets: ["pushgateway:9091"]
+    # Будет подтягивать цели с периодичностью из файлов
+    # Аналогично можно делать через docker, dns, облака и т.д.
+  - job_name: "file"
+    file_sd_configs:
+    - files:
+      - "/opt/targets/*.json"
+      refresh_interval: "1m"
