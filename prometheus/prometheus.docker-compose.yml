@@ -3,8 +3,10 @@ services:
     image: prom/prometheus:latest
     command:
       - "--config.file=${PROMETHEUS_CONFIG_PATH}"
+      # Очищение старых данных
       - "--storage.tsdb.retention.time=15d"
-      - "--storage.tsdb.retention.size=10GB"
+      # Очищение старых данных
+      - "--storage.tsdb.retention.size=30GB"
     ports:
       - ${PROMETHEUS_PORT}:${PROMETHEUS_PORT}
     volumes:

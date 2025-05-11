@@ -1,0 +1,14 @@
+services:
+  node_exporter:
+    image: prom/node-exporter:latest
+    command:
+      - "--path.procfs=${NODE_EXPORTER_HOST_PROC_DIRECTORY}"
+      - "--path.sysfs=${NODE_EXPORTER_HOST_SYS_DIRECTORY}"
+      - "--path.rootfs=${NODE_EXPORTER_HOST_FS_DIRECTORY}"
+    ports:
+      - ${NODE_EXPORTER_PORT}:${NODE_EXPORTER_PORT}
+    volumes:
+      - /proc:${NODE_EXPORTER_HOST_PROC_DIRECTORY}:ro
+      - /sys:${NODE_EXPORTER_HOST_SYS_DIRECTORY}:ro
+      - /:${NODE_EXPORTER_HOST_FS_DIRECTORY}:ro
+    restart: always
