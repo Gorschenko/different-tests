@@ -1,12 +1,24 @@
 ## Prometheus
 
-### Запуск Prometheus
+### Prometheus
 
 ```
 docker compose --file ./prometheus/prometheus.docker-compose.yml --env-file ./prometheus/.env up --detach
 ```
 
+### Grafana
+
+```
+docker compose --file ./prometheus/grafana.docker-compose.yml --env-file ./prometheus/.env up --detach
+```
+
 ## Exporters
+
+### Pushgateway
+
+```
+docker compose --file ./prometheus/pushgateway.docker-compose.yml --env-file ./prometheus/.env up --detach
+```
 
 ### Node
 

@@ -16,6 +16,7 @@ docker/nginx
 docker/nginx2
 docker/nginx3
 prometheus_data
+grafana_data
 pushgateway_data
 
 # production

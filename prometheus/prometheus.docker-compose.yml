@@ -16,7 +16,6 @@ services:
     restart: always
     networks:
       - ${NETWORK_NAME}
-
 networks:
   telematic:
     name: ${NETWORK_NAME}
