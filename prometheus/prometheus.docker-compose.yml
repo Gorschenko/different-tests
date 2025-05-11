@@ -13,3 +13,9 @@ services:
       - ./prometheus.yml:${PROMETHEUS_CONFIG_PATH}
       - ${PROMETHEUS_HOST_DATA_DIRECTORY}:/prometheus
     restart: always
+    networks:
+      - telematic
+networks:
+  telematic:
+    name: telematic
+    external: true

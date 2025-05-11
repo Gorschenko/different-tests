@@ -1,0 +1,14 @@
+services:
+  redis_exporter:
+    image: oliver006/redis_exporter:latest
+    environment:
+      - REDIS_ADDR=${REDIS_HOST}:${REDIS_PORT}
+    ports:
+      - ${REDIS_EXPORTER_PORT}:${REDIS_EXPORTER_PORT}
+    restart: always
+    networks:
+      - telematic
+networks:
+  telematic:
+    name: telematic
+    external: true
