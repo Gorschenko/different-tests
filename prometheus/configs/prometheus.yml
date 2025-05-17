@@ -30,4 +30,4 @@ scrape_configs:
       - "targets/*.json"
       refresh_interval: "1m"
 rule_files:
-  - "alerts/example.yml"
+  - "alerts/*.yml"

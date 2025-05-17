@@ -1,0 +1,65 @@
+groups:
+- name: instances
+  interval: 10s
+  rules:
+    # С интервалом 10 сек будет выполняться запрос up == 0
+    # Если условие будет выполняться в течение 1 мин, то
+    # Уведомление сработает
+    # Для каждой группы мы определяем правила, например, interval
+  - alert: InstanceDown
+    expr: up == 0
+    for: 1m
+    # Подходит для группировки событий, на основе которых
+    # будут выбираться каналы связи
+    labels:
+      severity: critical
+    annotations:
+      summary: Instance {{ $labels.instance }} is down!
+      description: "{{ $labels.instance }} of job {{ $labels.job }} has been down for 1 minute."
+  # Сравнение занятого места на диске с 10%
+  # и что файловая система не находится в режиме readonly
+  - alert: HostOutOfDiskSpace
+    expr: (node_filesystem_avail_bytes * 100) / node_filesystem_size_bytes < 10 and ON (instance, device, mountpoint) node_filesystem_readonly == 0
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      summary: Host out of disk space (instance {{ $labels.instance }})
+      description: "Disk is almost full (< 10% left)\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+    # Предсказание места на диске через 24 часа
+  - alert: HostDiskWillFillIn24Hours
+    expr: (node_filesystem_avail_bytes * 100) / node_filesystem_size_bytes < 10 and ON (instance, device, mountpoint) predict_linear(node_filesystem_avail_bytes{fstype!~"tmpfs"}[1h], 24 * 3600) < 0 and ON (instance, device, mountpoint) node_filesystem_readonly == 0
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      summary: Host disk will fill in 24 hours (instance {{ $labels.instance }})
+      description: "Filesystem is predicted to run out of space within the next 24 hours at current write rate\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+  # Сравнение загрузки CPU с 80%
+  - alert: HostHighCpuLoad
+    expr: 100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[2m])) * 100) > 80
+    for: 0m
+    labels:
+      severity: warning
+    annotations:
+      summary: Host high CPU load (instance {{ $labels.instance }})
+      description: "CPU load is > 80%\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+  # Сравнение кол-ва памяти с 10%
+  - alert: HostOutOfMemory
+    expr: node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes * 100 < 10
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      summary: Host out of memory (instance {{ $labels.instance }})
+      description: "Node memory is filling up (< 10% left)\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+  # Проверка нагрузки сети, если она превышает 100 Мб/сек
+  - alert: HostUnusualNetworkThroughputIn
+    expr: sum by (instance) (rate(node_network_receive_bytes_total[2m])) / 1024 / 1024 > 100
+    for: 5m
+    labels:
+      severity: warning
+    annotations:
+      summary: Host unusual network throughput in (instance {{ $labels.instance }})
+      description: "Host network interfaces are probably receiving too much data (> 100 MB/s)\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+
