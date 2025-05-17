@@ -10,9 +10,7 @@ services:
     ports:
       - ${PROMETHEUS_PORT}:${PROMETHEUS_PORT}
     volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
-      - ./alerts.yml:/etc/prometheus/alerts.yml
-      - ./targets:/opt/targets
+      - ./configs:/etc/prometheus
       - ${PROMETHEUS_HOST_DATA_DIRECTORY}:/prometheus
     restart: always
     networks:
