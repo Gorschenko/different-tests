@@ -10,7 +10,7 @@ services:
     ports:
       - ${PROMETHEUS_PORT}:${PROMETHEUS_PORT}
     volumes:
-      - ./configs:/etc/prometheus
+      - ./prom_configs:/etc/prometheus
       - ${PROMETHEUS_HOST_DATA_DIRECTORY}:/prometheus
     restart: always
     networks:

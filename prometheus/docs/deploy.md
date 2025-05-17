@@ -12,6 +12,12 @@ docker compose --file ./prometheus/prometheus.docker-compose.yml --env-file ./pr
 docker compose --file ./prometheus/grafana.docker-compose.yml --env-file ./prometheus/.env up --detach
 ```
 
+### Alertmanager
+
+```
+docker compose --file ./prometheus/alertmanager.docker-compose.yml --env-file ./prometheus/.env up --detach
+```
+
 ## Exporters
 
 ### Pushgateway
