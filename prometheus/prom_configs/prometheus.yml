@@ -43,15 +43,20 @@ scrape_configs:
       - "targets/*.json"
       refresh_interval: "1m"
   # Настройка сбора метрик с другого Prometheus
-  - job_name: federation
-    honor_labels: true
-    # Prometheus отдает метрики по /federate
-    metrics_path: /federate
-    # Вытаскиваем метрики, которые начинаются с job
-    # в соответствии с federation.yml
-    params:
-      match[]:
-        - "{__name__=~'^job:.*'}"
-    static_configs:
-      - targets:
-        - any_host_of_prometheus:9090
+  # - job_name: federation
+  #   honor_labels: true
+  #   # Prometheus отдает метрики по /federate
+  #   metrics_path: /federate
+  #   # Вытаскиваем метрики, которые начинаются с job
+  #   # в соответствии с federation.yml
+  #   params:
+  #     match[]:
+  #       - "{__name__=~'^job:.*'}"
+  #   static_configs:
+  #     - targets:
+  #       - any_host_of_prometheus:9090
+
+# Позволяет пересылать метрики в БД для долгого хранения.
+# Prometheus - Kafka Adapter - Kafka - ClickHouse/MySql
+# remote_write:
+#   - url: "http://localhost:8080/receive"
