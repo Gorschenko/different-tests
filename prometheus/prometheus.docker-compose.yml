@@ -7,6 +7,8 @@ services:
       - "--storage.tsdb.retention.time=15d"
       # Очищение старых данных
       - "--storage.tsdb.retention.size=30GB"
+      # Позволяет через API забирать dump
+      # - "--web.enable-admin-api"
     ports:
       - ${PROMETHEUS_PORT}:9090
     volumes:
