@@ -5,8 +5,6 @@ services:
       - "--path.procfs=${NODE_EXPORTER_HOST_PROC_DIRECTORY}"
       - "--path.sysfs=${NODE_EXPORTER_HOST_SYS_DIRECTORY}"
       - "--path.rootfs=${NODE_EXPORTER_HOST_FS_DIRECTORY}"
-    ports:
-      - ${NODE_EXPORTER_PORT}:${NODE_EXPORTER_PORT}
     volumes:
       - /proc:${NODE_EXPORTER_HOST_PROC_DIRECTORY}:ro
       - /sys:${NODE_EXPORTER_HOST_SYS_DIRECTORY}:ro

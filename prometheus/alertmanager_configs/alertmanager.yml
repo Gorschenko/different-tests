@@ -3,40 +3,42 @@
 route:
   # Группировка уведомлений
   group_by: ["alertname"]
+  # Время ожидания после поступления первого алерта в группу, прежде чем отправить уведомление.
   group_wait: 30s
-  # Интервал отправки уведомлений в группе
+  # Минимальный интервал между повторными уведомлениями для одной и той же группы алертов,
+  # если в неё поступают новые алерты.
   group_interval: 5m
-  # Интервал времени, через который alertmanager напомнит об алерте,
-  # если он еще не разрешился
+  # Как часто Alertmanager будет повторно отправлять одни и те же алерты,
+  # если они все ещё активны и не подтверждены (not resolved).
   repeat_interval: 1h
   # Дефолтный отправитель, если не выполнено условие для других
   receiver: "web.hook"
   routes:
-    - receiver: "pagerduty-critical"
-      group_wait: 10s
-      # Условие определение отправителя
-      matchers:
-        - severity="critical"
-        # Применение regexp
-        # - severity=~"warning|info"
-      # Продолжит проверку условий
-      # continue: true
-    - receiver: "slack-warning"
-      group_wait: 60s
-      matchers:
-        - severity="warning"
+    # - receiver: "pagerduty-critical"
+    #   group_wait: 10s
+    #   # Условие определение отправителя
+    #   matchers:
+    #     - severity="critical"
+    #     # Применение regexp
+    #     # - severity=~"warning|info"
+    #   # Продолжит проверку условий
+    #   # continue: true
+    # - receiver: "slack-warning"
+    #   group_wait: 60s
+    #   matchers:
+    #     - severity="warning"
 receivers:
   - name: "web.hook"
     webhook_configs:
-      - url: "http://127.0.0.1:5001"
-  - name: "pagerduty-critical"
-    pagerduty_configs:
-    - routing_key: "test"
-      service_key: "md5-hash"
-  - name: "slack-warning"
-    slack_configs:
-    - api_url: "https://hooks.slack.com/services/token_of_slack"
-      channel: "#warnings"
+      - url: "http://alertmanager-bot:8080"
+  # - name: "pagerduty-critical"
+  #   pagerduty_configs:
+  #   - routing_key: "test"
+  #     service_key: "md5-hash"
+  # - name: "slack-warning"
+  #   slack_configs:
+  #   - api_url: "https://hooks.slack.com/services/token_of_slack"
+  #     channel: "#warnings"
 # Позволяет не отправлять алерты, если другие алерты уже существуют
 inhibit_rules:
   # Если существует алерт тегом critical,

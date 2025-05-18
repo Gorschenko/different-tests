@@ -6,10 +6,9 @@ services:
       - "--persistence.file=/data/metrics.data"
       # Период сохранения метрик в файл
       - "--persistence.interval=5m"
-    ports:
-      - ${PUSHGATEWAY_PORT}:${PUSHGATEWAY_PORT}
     volumes:
       - ${PUSHGATEWAY_HOST_DATA_DIRECTORY}:/data
+    restart: always
     networks:
       - ${NETWORK_NAME}
 networks:

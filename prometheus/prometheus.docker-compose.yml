@@ -8,10 +8,32 @@ services:
       # Очищение старых данных
       - "--storage.tsdb.retention.size=30GB"
     ports:
-      - ${PROMETHEUS_PORT}:${PROMETHEUS_PORT}
+      - ${PROMETHEUS_PORT}:9090
     volumes:
       - ./prom_configs:/etc/prometheus
       - ${PROMETHEUS_HOST_DATA_DIRECTORY}:/prometheus
+    restart: always
+    networks:
+      - ${NETWORK_NAME}
+  alertmanager:
+    image: prom/alertmanager:latest
+    command:
+      - "--config.file=/etc/alertmanager/alertmanager.yml"
+    volumes:
+      - ./alertmanager_configs:/etc/alertmanager
+    restart: always
+    networks:
+      - ${NETWORK_NAME}
+  alertmanager-bot:
+    image: metalmatze/alertmanager-bot:latest
+    environment:
+      TELEGRAM_TOKEN: ${TELEGRAM_TOKEN}
+      TELEGRAM_CHAT_ID: ${TELEGRAM_CHAT_ID}
+      TELEGRAM_ADMIN: ${TELEGRAM_ADMIN_ID}
+      STORE: bolt
+      # LISTEN_ADDR: 0.0.0.0:8080
+    volumes:
+    - ${ALERTMANAGER_BOT_HOST_DATA_DIRECTORY}:/data
     restart: always
     networks:
       - ${NETWORK_NAME}

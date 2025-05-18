@@ -5,7 +5,7 @@ services:
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=admin
     ports:
-      - ${GF_PORT}:${GF_PORT}
+      - ${GF_PORT}:3000
     volumes:
       - ${GF_HOST_DATA_DIRECTORY}:/var/lib/grafana
     restart: always
