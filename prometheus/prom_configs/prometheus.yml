@@ -2,10 +2,20 @@ global:
   scrape_interval: 15s
   # Интервал проверки правил уведомлений
   evaluation_interval: 15s
+  # Проставляем label для внешних источников.
+  # Подойдет для федерации - для сбора метрик с нескольких Prometheus,
+  # которые будут отправляться на центральный сервер
+  external_labels:
+    datacenter: dc1
+
+rule_files:
+  - "rules/alerts.yml"
+
 alerting:
   alertmanagers:
     - static_configs:
         - targets: ['alertmanager:9093']
+
 scrape_configs:
   - job_name: "prometheus"
     static_configs:
@@ -32,5 +42,16 @@ scrape_configs:
     - files:
       - "targets/*.json"
       refresh_interval: "1m"
-rule_files:
-  - "alerts/*.yml"
+  # Настройка сбора метрик с другого Prometheus
+  - job_name: federation
+    honor_labels: true
+    # Prometheus отдает метрики по /federate
+    metrics_path: /federate
+    # Вытаскиваем метрики, которые начинаются с job
+    # в соответствии с federation.yml
+    params:
+      match[]:
+        - "{__name__=~'^job:.*'}"
+    static_configs:
+      - targets:
+        - any_host_of_prometheus:9090

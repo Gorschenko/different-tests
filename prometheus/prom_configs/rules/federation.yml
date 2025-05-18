@@ -1,0 +1,10 @@
+groups:
+  - name: globaldc
+    interval: 15s
+    rules:
+    # Правило записи метрики:
+    # level:metric:operations, где
+    # level - уровень; metric - метрика, остается без изменения
+    - record: job:node_memory_MemTotal_bytes:sum
+    # Посчитать память со всех узлов
+    expr: sum without(instance)(node_memory_MemTotal_bytes{job="node"})
