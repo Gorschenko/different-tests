@@ -1,9 +1,15 @@
 ## Prometheus
 
-### Prometheus and Alertmanager
+### Prometheus
 
 ```
 docker compose --file ./prometheus/prometheus.docker-compose.yml --env-file ./prometheus/.env up --detach
+```
+
+### Alertmanager
+
+```
+docker compose --file ./prometheus/alert-manager.docker-compose.yml --env-file ./prometheus/.env up --detach
 ```
 
 ### Grafana
