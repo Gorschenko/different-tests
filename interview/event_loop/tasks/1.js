@@ -8,3 +8,27 @@ new Promise((resolve) => {
 }).then(() => console.log("Step 4: In then"));
 
 setTimeout(() => console.log("Step 5: In another setTimeout"));
+
+/*
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Конструктор Promise вызывается синхронно, то есть new Promise((resolve) => {console.log("test"); resolve()})
+*/
